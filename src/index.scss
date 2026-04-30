@@ -14,16 +14,19 @@
 }
 
 #root {
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  margin: 0;
+  padding: 0;
+  width: 100%;
 }
 
 .nav {
   display: flex;
   gap: 1rem;
   justify-content: center;
-  margin-bottom: 2rem;
+  background-color: blue;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 100%;
 
   a {
     color: inherit;
@@ -33,7 +36,12 @@
 body {
   margin: 0;
   display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: red;
+}
+
+.content-container {
+  background-color: green;
+  margin: 15px;
 }

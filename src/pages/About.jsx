@@ -1,6 +1,6 @@
 function About() {
   return (
-    <section>
+    <section class="content-container">
       <h1>About</h1>
       <p>This is the about page.</p>
     </section>
