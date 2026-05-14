@@ -33,12 +33,28 @@
   }
 }
 
+.footer {
+  display: flex;
+  width: 100%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: orange;
+}
+
 body {
   margin: 0;
   display: flex;
   min-width: 320px;
   min-height: 100vh;
   background-color: red;
+}
+
+.content {
+  height: 100%;
+}
+
+.body-content {
+  min-height: 100%;
 }
 
 .content-container {

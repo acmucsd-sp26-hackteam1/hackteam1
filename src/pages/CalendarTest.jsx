@@ -1,6 +1,6 @@
 import { TimeFrames } from "../helpers.js"
 import { useState, useRef, useEffect } from 'react';
-import { Month } from "../components/calendar/Month.jsx";
+import { MonthView } from "../components/calendar/MonthView.jsx";
 
 function CalendarTest() {
 
@@ -16,7 +16,7 @@ function CalendarTest() {
       <div className="calendar-content">
         {viewMode === TimeFrames.MONTH && 
         <>month
-          <Month />
+          <MonthView />
         </>
         }
         {viewMode === TimeFrames.WEEK && 

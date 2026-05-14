@@ -12,12 +12,15 @@ function App() {
         <Link to="/about">About</Link>
         <Link to="/calendartest">Test Calendar</Link>
       </nav>
-      <Routes>
+      <Routes className="body-content">
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/calendartest" element={<CalendarTest />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <div className="footer">
+        this is the footer
+      </div>
     </div>
   )
 }
