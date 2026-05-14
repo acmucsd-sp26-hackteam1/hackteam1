@@ -1,6 +1,6 @@
 function Home() {
   return (
-    <section class="content-container">
+    <section className="content-container">
       <h1>Home</h1>
       <p>Hello Calendar World!</p>
     </section>
