@@ -1,3 +1,5 @@
+@use './styles/google-button';
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -24,12 +26,20 @@
   gap: 1rem;
   justify-content: center;
   background-color: blue;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px 20px;
   width: 100%;
+  box-sizing: border-box;
 
   a {
     color: inherit;
+  }
+
+  .nav-spacer {
+    margin-right: auto;
+  }
+
+  .nav-login {
+    margin-left: auto;
   }
 }
 
@@ -60,6 +70,13 @@ body {
 .content-container {
   background-color: green;
   margin: 15px;
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
 /*
