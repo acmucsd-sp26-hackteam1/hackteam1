@@ -63,6 +63,44 @@ body {
 }
 
 /*
+ Home Page
+*/
+
+.hero-section {
+  height: 120vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-section::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 120%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+.hero-image {
+  position: absolute;
+  height: 120%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  color: white;
+  text-align: center;
+}
+
+/*
  Month View Styles
 */
 
