@@ -17,6 +17,9 @@
   margin: 0;
   padding: 0;
   width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .nav {
@@ -50,11 +53,13 @@ body {
 }
 
 .content {
-  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .body-content {
-  min-height: 100%;
+  flex: 1;
 }
 
 .content-container {
