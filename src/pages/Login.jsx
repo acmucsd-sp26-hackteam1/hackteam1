@@ -1,7 +1,15 @@
+import { signInWithPopup } from 'firebase/auth'
+import { auth, googleProvider } from '../firebase.js'
+
 function Login() {
-  // todo: wire up firebase google auth here
-  const handleGoogleSignIn = () => {
-    console.log('google sign-in clicked')
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider)
+      // TODO - the actual login part
+      console.log('signed in as', result.user.displayName)
+    } catch (err) {
+      console.error('google sign-in failed', err)
+    }
   }
 
   return (
