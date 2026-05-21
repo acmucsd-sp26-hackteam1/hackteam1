@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from 'react-router-dom'
+import { Link, Route, Routes, useLocation } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import About from './pages/About.jsx'
 import CalendarTest from './pages/CalendarTest.jsx'
@@ -6,8 +6,14 @@ import Login from './pages/Login.jsx'
 import JoinTeam from './pages/JoinTeam.jsx'
 import CreateTeam from './pages/CreateTeam.jsx'
 import NotFound from './pages/NotFound.jsx'
+import CreateGroupFAB from './components/CreateGroupFAB.jsx'
+
+const CREATE_GROUP_ROUTES = ['/', '/calendartest']
 
 function App() {
+  const { pathname } = useLocation()
+  const showCreateGroup = CREATE_GROUP_ROUTES.includes(pathname)
+
   return (
     <div className="content">
       <nav className="nav">
@@ -31,6 +37,7 @@ function App() {
       <div className="footer">
         Made with ❤️ by ACM Hack Project Team 1
       </div>
+      {showCreateGroup && <CreateGroupFAB />}
     </div>
   )
 }
