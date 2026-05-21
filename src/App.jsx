@@ -1,10 +1,16 @@
-import { Link, Route, Routes } from 'react-router-dom'
+import { Link, Route, Routes, useLocation } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import About from './pages/About.jsx'
 import CalendarTest from './pages/CalendarTest.jsx'
 import NotFound from './pages/NotFound.jsx'
+import CreateGroupFAB from './components/CreateGroupFAB.jsx'
+
+const CREATE_GROUP_ROUTES = ['/', '/calendartest']
 
 function App() {
+  const { pathname } = useLocation()
+  const showCreateGroup = CREATE_GROUP_ROUTES.includes(pathname)
+
   return (
     <div className="content">
       <nav className="nav">
@@ -21,6 +27,7 @@ function App() {
       <div className="footer">
         this is the footer
       </div>
+      {showCreateGroup && <CreateGroupFAB />}
     </div>
   )
 }

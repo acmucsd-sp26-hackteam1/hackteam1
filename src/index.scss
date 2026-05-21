@@ -69,3 +69,172 @@ body {
 .month-day-cell {
   border: 1px solid yellow;
 }
+
+/*
+ create group button / floating action bar
+*/
+
+$ucsd-navy: #182b49;
+$ucsd-blue: #4a7ab5;
+$ucsd-blue-light: #8ec5f0;
+$ucsd-blue-bright: #5eb3f0;
+
+.create-group-fab {
+  position: fixed;
+  bottom: 2.5rem;
+  right: 2rem;
+  z-index: 100;
+  padding: 0.5rem 1.1rem;
+  font-family: 'Teko', 'Roboto Condensed', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: $ucsd-blue-light;
+  background: rgba($ucsd-navy, 0.62);
+  border: 2px solid rgba($ucsd-blue, 0.9);
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  box-shadow:
+    0 2px 14px rgba($ucsd-navy, 0.45),
+    0 0 0 1px rgba($ucsd-blue-bright, 0.2);
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s, border-color 0.2s;
+
+  &:hover {
+    background: rgba($ucsd-navy, 0.82);
+    border-color: $ucsd-blue-bright;
+    box-shadow:
+      0 4px 18px rgba($ucsd-navy, 0.55),
+      0 0 12px rgba($ucsd-blue-bright, 0.4);
+    transform: scale(1.03);
+  }
+}
+
+.create-group-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba($ucsd-navy, 0.55);
+  padding: 1rem;
+}
+
+.create-group-modal {
+  width: 100%;
+  max-width: 400px;
+  padding: 1.5rem;
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: rgba($ucsd-navy, 0.88);
+  border: 1px solid rgba($ucsd-blue, 0.55);
+  border-top: 4px solid $ucsd-blue-bright;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba($ucsd-navy, 0.6);
+
+  h2 {
+    margin: 0 0 1.25rem;
+    font-family: 'Teko', 'Roboto Condensed', sans-serif;
+    font-size: 1.85rem;
+    line-height: 1.1;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: $ucsd-blue-light;
+    font-weight: 600;
+  }
+
+  input,
+  textarea,
+  button {
+    font-family: inherit;
+  }
+}
+
+.create-group-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+
+  span:first-child {
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+
+  input,
+  textarea {
+    padding: 0.5rem 0.65rem;
+    font: inherit;
+    color: inherit;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba($ucsd-blue, 0.5);
+    border-radius: 6px;
+    resize: vertical;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    &:focus {
+      outline: 2px solid rgba($ucsd-blue-bright, 0.75);
+      outline-offset: 1px;
+      border-color: $ucsd-blue-bright;
+    }
+  }
+}
+
+.create-group-hint {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.create-group-error {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #ff6b6b;
+}
+
+.create-group-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 1.25rem;
+}
+
+.create-group-cancel,
+.create-group-submit {
+  padding: 0.5rem 1rem;
+  font: inherit;
+  font-size: 0.875rem;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.create-group-cancel {
+  color: rgba(255, 255, 255, 0.9);
+  background: transparent;
+  border-color: rgba($ucsd-blue, 0.65);
+
+  &:hover {
+    background: rgba($ucsd-blue, 0.2);
+    border-color: $ucsd-blue-bright;
+  }
+}
+
+.create-group-submit {
+  color: #fff;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  background: $ucsd-blue-bright;
+  border-color: $ucsd-blue;
+
+  &:hover {
+    background: lighten($ucsd-blue-bright, 8%);
+    box-shadow: 0 0 10px rgba($ucsd-blue-bright, 0.5);
+  }
+}
