@@ -17,17 +17,19 @@ function App() {
         <Link to="/calendartest">Test Calendar</Link>
         <Link to="/login" className="nav-login">Login</Link>
       </nav>
-      <Routes className="body-content">
-        <Route path="/" element={<Home />} />
+      <div className="body-content">
+        <Routes>
+          <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/calendartest" element={<CalendarTest />} />
         <Route path="/join-team" element={<JoinTeam />} />
         <Route path="/create-team" element={<CreateTeam />} />
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<NotFound />} />
-      </Routes>
+        </Routes>
+      </div>
       <div className="footer">
-        this is the footer
+        Made with ❤️ by ACM Hack Project Team 1
       </div>
     </div>
   )
