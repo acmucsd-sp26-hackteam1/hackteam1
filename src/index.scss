@@ -1,3 +1,5 @@
+@use './styles/google-button';
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -17,19 +19,30 @@
   margin: 0;
   padding: 0;
   width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .nav {
   display: flex;
   gap: 1rem;
   justify-content: center;
-  background-color: blue;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px 20px;
+  background-color: rgb(100, 100, 241);
   width: 100%;
+  box-sizing: border-box;
 
   a {
     color: inherit;
+  }
+
+  .nav-spacer {
+    margin-right: auto;
+  }
+
+  .nav-login {
+    margin-left: auto;
   }
 }
 
@@ -38,7 +51,7 @@
   width: 100%;
   padding-top: 10px;
   padding-bottom: 10px;
-  background-color: orange;
+  background-color: rgb(248, 190, 84);
 }
 
 body {
@@ -46,27 +59,41 @@ body {
   display: flex;
   min-width: 320px;
   min-height: 100vh;
-  background-color: red;
+  background-color: rgb(242, 227, 178);
 }
 
 .content {
-  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .body-content {
-  min-height: 100%;
+  flex: 1;
 }
 
 .content-container {
-  background-color: green;
+  background-color: rgb(64, 170, 64);
   margin: 15px;
 }
 
+.login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
 /*
- Month View Styles
+ Month View 
 */
 
-.month-day-cell {
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.month-header {
   border: 1px solid yellow;
 }
 
@@ -237,4 +264,39 @@ $ucsd-blue-bright: #5eb3f0;
     background: lighten($ucsd-blue-bright, 8%);
     box-shadow: 0 0 10px rgba($ucsd-blue-bright, 0.5);
   }
+}
+
+.month-cell {
+  border: 1px solid yellow;
+  min-height: 80px;
+}
+
+/*
+ Week View 
+*/
+
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.week-cell {
+  border: 1px solid yellow;
+  min-height: 150px;
+  padding: 4px;
+  text-align: center;
+}
+
+/*
+ Day View 
+*/
+
+.day-view {
+  display: flex;
+  flex-direction: column;
+}
+
+.day-row {
+  border-bottom: 1px solid yellow;
+  min-height: 40px;
 }
