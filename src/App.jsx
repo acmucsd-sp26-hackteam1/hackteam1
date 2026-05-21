@@ -2,6 +2,8 @@ import { Link, Route, Routes } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import About from './pages/About.jsx'
 import CalendarTest from './pages/CalendarTest.jsx'
+import JoinTeam from './pages/JoinTeam.jsx'
+import CreateTeam from './pages/CreateTeam.jsx'
 import NotFound from './pages/NotFound.jsx'
 
 function App() {
@@ -16,6 +18,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/calendartest" element={<CalendarTest />} />
+        <Route path="/join-team" element={<JoinTeam />} />
+        <Route path="/create-team" element={<CreateTeam />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <div className="footer">
