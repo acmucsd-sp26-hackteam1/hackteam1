@@ -85,6 +85,70 @@ body {
 }
 
 /*
+ Home Page
+*/
+
+.hero-section {
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-section::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+.hero-image {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  color: white;
+  text-align: center;
+}
+
+/*
+ How to Use
+*/
+
+.htu-section {
+  display: flex;
+  flex-direction: column; 
+  gap: 40px;
+  padding: 50px 20px;
+  max-width: 1200px;
+  margin: 0 auto; 
+}
+
+.htu-content {
+  position: relative;
+  text-align: center;
+}
+
+.htu-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap; 
+}
+
+/*
  Month View 
 */
 
