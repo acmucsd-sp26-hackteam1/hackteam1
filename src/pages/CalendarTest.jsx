@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { MonthView } from "../components/calendar/MonthView.jsx";
 import { WeekView } from "../components/calendar/WeekView.jsx";
 import { DayView } from "../components/calendar/DayView.jsx";
-import { Link } from 'react-router-dom';
 
 function CalendarTest() {
 
@@ -11,10 +10,10 @@ function CalendarTest() {
 
   return (
     <section className="content-container">
-      <div>
-        <Link to="/join-team"><button>Join Team</button></Link>
-        <Link to="/create-team"><button>Create Team</button></Link>
-      </div>
+
+      {/*I got rid of 'join group' and 'create group' buttons*/}
+      {/*However their pages still exist if yall want to use them or get rid of them*/}
+
       <div className="view-buttons"> {/* We should replace with dropdown */}
         <button onClick={() => {setViewMode(TimeFrames.MONTH)}}>Month View</button>
         <button onClick={() => {setViewMode(TimeFrames.WEEK)}}>Week View</button>

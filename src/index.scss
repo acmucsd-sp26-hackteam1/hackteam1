@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use './styles/google-button';
 
 :root {
@@ -190,15 +191,12 @@ $ucsd-blue-bright: #5eb3f0;
   box-shadow:
     0 2px 14px rgba($ucsd-navy, 0.45),
     0 0 0 1px rgba($ucsd-blue-bright, 0.2);
-  transition: background 0.2s, transform 0.15s, box-shadow 0.2s, border-color 0.2s;
+  transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
 
   &:hover {
     background: rgba($ucsd-navy, 0.82);
     border-color: $ucsd-blue-bright;
-    box-shadow:
-      0 4px 18px rgba($ucsd-navy, 0.55),
-      0 0 12px rgba($ucsd-blue-bright, 0.4);
-    transform: scale(1.03);
+    box-shadow: 0 4px 18px rgba($ucsd-navy, 0.55);
   }
 }
 
@@ -226,7 +224,7 @@ $ucsd-blue-bright: #5eb3f0;
   box-shadow: 0 8px 32px rgba($ucsd-navy, 0.6);
 
   h2 {
-    margin: 0 0 1.25rem;
+    margin: 0 0 1rem;
     font-family: 'Teko', 'Roboto Condensed', sans-serif;
     font-size: 1.85rem;
     line-height: 1.1;
@@ -240,6 +238,37 @@ $ucsd-blue-bright: #5eb3f0;
   textarea,
   button {
     font-family: inherit;
+  }
+}
+
+.create-group-tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid rgba($ucsd-blue, 0.4);
+  button {
+    flex: 1;
+    padding: 0.45rem 0.75rem;
+    font-family: 'Teko', 'Roboto Condensed', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+    &:hover {
+      color: rgba($ucsd-blue-light, 0.85);
+    }
+    &.active,
+    &[aria-selected='true'] {
+      color: $ucsd-blue-light;
+      border-bottom-color: $ucsd-blue-bright;
+    }
   }
 }
 
@@ -325,7 +354,7 @@ $ucsd-blue-bright: #5eb3f0;
   border-color: $ucsd-blue;
 
   &:hover {
-    background: lighten($ucsd-blue-bright, 8%);
+    background: color.adjust($ucsd-blue-bright, $lightness: 8%);
     box-shadow: 0 0 10px rgba($ucsd-blue-bright, 0.5);
   }
 }
