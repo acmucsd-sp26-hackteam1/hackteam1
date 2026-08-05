@@ -3,19 +3,17 @@ import { useState } from 'react';
 import { MonthView } from "../components/calendar/MonthView.jsx";
 import { WeekView } from "../components/calendar/WeekView.jsx";
 import { DayView } from "../components/calendar/DayView.jsx";
-import { Link } from 'react-router-dom';
+import { GROUP_MODAL_TABS, useGroupModal } from '../context/GroupModalContext.jsx';
 
 function CalendarTest() {
-
   const [viewMode, setViewMode] = useState(TimeFrames.MONTH);
-
+  const { openGroupModal } = useGroupModal();
   return (
     <section className="content-container">
-      <div>
-        <Link to="/join-team"><button>Join Team</button></Link>
-        <Link to="/create-team"><button>Create Team</button></Link>
-      </div>
-      <div className="view-buttons"> {/* We should replace with dropdown */}
+      <div className="view-buttons">
+        <button type="button" onClick={() => openGroupModal(GROUP_MODAL_TABS.JOIN)}>
+          Join Group
+        </button>
         <button onClick={() => {setViewMode(TimeFrames.MONTH)}}>Month View</button>
         <button onClick={() => {setViewMode(TimeFrames.WEEK)}}>Week View</button>
         <button onClick={() => {setViewMode(TimeFrames.DAY)}}>Day View</button>
@@ -24,7 +22,6 @@ function CalendarTest() {
         {viewMode === TimeFrames.MONTH && <MonthView />}
         {viewMode === TimeFrames.WEEK && <WeekView />}
         {viewMode === TimeFrames.DAY && <DayView />}
-
       </div>
     </section>
   )

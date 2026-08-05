@@ -1,12 +1,15 @@
-import { Link } from 'react-router-dom';
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { GROUP_MODAL_TABS, useGroupModal } from '../context/GroupModalContext.jsx'
 
 function JoinTeam() {
-  return (
-    <section className="content-container">
-      <Link to="/calendartest"><button>Back to Main Calendar</button></Link>
-      <h1>Join Team!!!!</h1>
-    </section>
-  )
+  const navigate = useNavigate()
+  const { openGroupModal } = useGroupModal()
+  useEffect(() => {
+    openGroupModal(GROUP_MODAL_TABS.JOIN)
+    navigate('/calendartest', { replace: true })
+  }, [navigate, openGroupModal])
+  return null
 }
 
 export default JoinTeam
