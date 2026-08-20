@@ -1,6 +1,11 @@
 import { useState } from 'react'
 import { GROUP_MODAL_TABS, useGroupModal } from '../context/GroupModalContext.jsx'
 
+const TABS = {
+  CREATE: 'create',
+  JOIN: 'join',
+}
+
 function CreateGroupFAB() {
   const { isOpen, activeTab, setActiveTab, openGroupModal, closeGroupModal } = useGroupModal()
   const [groupName, setGroupName] = useState('')
