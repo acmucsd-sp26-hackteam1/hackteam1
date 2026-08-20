@@ -478,3 +478,105 @@ $ucsd-blue-bright: #5eb3f0;
     height: 100%;
     object-fit: cover;
 }
+
+/*
+ Profile modal
+*/
+.profile-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba($ucsd-navy, 0.55);
+  padding: 1rem;
+}
+.profile-modal {
+  width: 100%;
+  max-width: 420px;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  padding: 1.5rem;
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: rgba($ucsd-navy, 0.88);
+  border: 1px solid rgba($ucsd-blue, 0.55);
+  border-top: 4px solid $ucsd-blue-bright;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba($ucsd-navy, 0.6);
+  h2 {
+    margin: 0 0 1rem;
+    font-family: 'Teko', 'Roboto Condensed', sans-serif;
+    font-size: 1.85rem;
+    line-height: 1.1;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: $ucsd-blue-light;
+    font-weight: 600;
+  }
+  input,
+  textarea,
+  button {
+    font-family: inherit;
+  }
+}
+.profile-avatar-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  > span:first-child {
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+}
+.profile-avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.profile-avatar-preview {
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba($ucsd-blue, 0.5);
+  font-family: 'Teko', 'Roboto Condensed', sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: $ucsd-blue-light;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+.profile-avatar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.profile-avatar-upload {
+  padding: 0.5rem 1rem;
+  font: inherit;
+  font-size: 0.875rem;
+  color: #fff;
+  background: $ucsd-blue-bright;
+  border: 1px solid $ucsd-blue;
+  border-radius: 6px;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  font-weight: 500;
+  &:hover {
+    background: color.adjust($ucsd-blue-bright, $lightness: 8%);
+    box-shadow: 0 0 10px rgba($ucsd-blue-bright, 0.5);
+  }
+}
