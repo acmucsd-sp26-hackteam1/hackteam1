@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { GROUP_MODAL_TABS, useGroupModal } from '../context/GroupModalContext.jsx'
 
 const TABS = {
   CREATE: 'create',
@@ -6,8 +7,7 @@ const TABS = {
 }
 
 function CreateGroupFAB() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [activeTab, setActiveTab] = useState(TABS.CREATE)
+  const { isOpen, activeTab, setActiveTab, openGroupModal, closeGroupModal } = useGroupModal()
   const [groupName, setGroupName] = useState('')
   const [friendIds, setFriendIds] = useState('')
   const [joinCode, setJoinCode] = useState('')
@@ -15,7 +15,6 @@ function CreateGroupFAB() {
   const [joinError, setJoinError] = useState('')
 
   const resetForm = () => {
-    setActiveTab(TABS.CREATE)
     setGroupName('')
     setFriendIds('')
     setJoinCode('')
@@ -23,14 +22,8 @@ function CreateGroupFAB() {
     setJoinError('')
   }
 
-  const openModal = () => {
-    setIsOpen(true)
-    setNameError('')
-    setJoinError('')
-  }
-
   const closeModal = () => {
-    setIsOpen(false)
+    closeGroupModal()
     resetForm()
   }
 
@@ -52,6 +45,7 @@ function CreateGroupFAB() {
       .split(/[,\s]+/)
       .map((id) => id.trim())
       .filter((id) => /^\d+$/.test(id))
+    
     console.log({ groupName: trimmedName, friendIds: ids })
     closeModal()
   }
@@ -64,18 +58,17 @@ function CreateGroupFAB() {
       return
     }
     setJoinError('')
-
     console.log({ groupCode: trimmedCode })
     closeModal()
   }
 
-  const modalTitle = activeTab === TABS.CREATE ? 'Create Group' : 'Join Group'
+  const modalTitle = activeTab === GROUP_MODAL_TABS.CREATE ? 'Create Group' : 'Join Group'
   return (
     <>
       <button
         type="button"
         className="create-group-fab"
-        onClick={openModal}
+        onClick={() => openGroupModal(GROUP_MODAL_TABS.CREATE)}
         aria-label="Create or join a group"
       >
         + Group
@@ -94,16 +87,15 @@ function CreateGroupFAB() {
             aria-modal="true"
           >
             <h2 id="create-group-title">{modalTitle}</h2>
-
             <div className="create-group-tabs" role="tablist" aria-label="Group actions">
               <button
                 type="button"
                 role="tab"
                 id="create-group-tab-create"
-                aria-selected={activeTab === TABS.CREATE}
+                aria-selected={activeTab === GROUP_MODAL_TABS.CREATE}
                 aria-controls="create-group-panel-create"
-                className={activeTab === TABS.CREATE ? 'active' : ''}
-                onClick={() => switchTab(TABS.CREATE)}
+                className={activeTab === GROUP_MODAL_TABS.CREATE ? 'active' : ''}
+                onClick={() => switchTab(GROUP_MODAL_TABS.CREATE)}
               >
                 Create
               </button>
@@ -111,16 +103,15 @@ function CreateGroupFAB() {
                 type="button"
                 role="tab"
                 id="create-group-tab-join"
-                aria-selected={activeTab === TABS.JOIN}
+                aria-selected={activeTab === GROUP_MODAL_TABS.JOIN}
                 aria-controls="create-group-panel-join"
-                className={activeTab === TABS.JOIN ? 'active' : ''}
-                onClick={() => switchTab(TABS.JOIN)}
+                className={activeTab === GROUP_MODAL_TABS.JOIN ? 'active' : ''}
+                onClick={() => switchTab(GROUP_MODAL_TABS.JOIN)}
               >
                 Join
               </button>
             </div>
-            
-              {activeTab === TABS.CREATE ? (
+            {activeTab === GROUP_MODAL_TABS.CREATE ? (
               <form
                 onSubmit={handleCreateGroup}
                 role="tabpanel"
@@ -157,7 +148,6 @@ function CreateGroupFAB() {
                     Enter one or more numeric IDs, separated by commas or spaces
                   </span>
                 </label>
-
                 <div className="create-group-actions">
                   <button type="button" className="create-group-cancel" onClick={closeModal}>
                     Cancel
@@ -194,7 +184,6 @@ function CreateGroupFAB() {
                     Ask a group member for their invite code
                   </span>
                 </label>
-
                 <div className="create-group-actions">
                   <button type="button" className="create-group-cancel" onClick={closeModal}>
                     Cancel

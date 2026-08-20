@@ -7,15 +7,16 @@ import JoinTeam from './pages/JoinTeam.jsx'
 import CreateTeam from './pages/CreateTeam.jsx'
 import NotFound from './pages/NotFound.jsx'
 import CreateGroupFAB from './components/CreateGroupFAB.jsx'
+import { GroupModalProvider } from './context/GroupModalContext.jsx'
 
 const CREATE_GROUP_ROUTES = ['/calendartest']
 
 function App() {
   const { pathname } = useLocation()
   const showCreateGroup = CREATE_GROUP_ROUTES.includes(pathname)
-
   return (
-    <div className="content">
+    <GroupModalProvider>
+      <div className="content">
       <nav className="nav">
         <span className="nav-spacer" />
         <Link to="/">Home</Link>
@@ -39,6 +40,7 @@ function App() {
       </div>
       {showCreateGroup && <CreateGroupFAB />}
     </div>
+    </GroupModalProvider>
   )
 }
 

@@ -3,30 +3,26 @@ import { useState } from 'react';
 import { MonthView } from "../components/calendar/MonthView.jsx";
 import { WeekView } from "../components/calendar/WeekView.jsx";
 import { DayView } from "../components/calendar/DayView.jsx";
+import { GROUP_MODAL_TABS, useGroupModal } from '../context/GroupModalContext.jsx';
 
 function CalendarTest() {
-
   const [viewMode, setViewMode] = useState(TimeFrames.MONTH);
-  const [showAvatarSidebar, setShowAvatarSidebar] = useState(false);
-
+  const { openGroupModal } = useGroupModal();
   return (
     <section className="content-container">
-
-      {/*I got rid of 'join group' and 'create group' buttons*/}
-      {/*However their pages still exist if yall want to use them or get rid of them*/}
-
-      <div className="view-buttons"> {/* We should replace with dropdown */}
+      <div className="view-buttons">
+        <button type="button" onClick={() => openGroupModal(GROUP_MODAL_TABS.JOIN)}>
+          Join Group
+        </button>
         <button onClick={() => {setViewMode(TimeFrames.MONTH)}}>Month View</button>
         <button onClick={() => {setViewMode(TimeFrames.WEEK)}}>Week View</button>
         <button onClick={() => {setViewMode(TimeFrames.DAY)}}>Day View</button>
       </div>
-      <CalendarLayout showAvatarSidebar={showAvatarSidebar}>
-        <div className="calendar-content">
-          {viewMode === TimeFrames.MONTH && <MonthView />}
-          {viewMode === TimeFrames.WEEK && <WeekView />}
-          {viewMode === TimeFrames.DAY && <DayView />}
-        </div>
-      </CalendarLayout>
+      <div className="calendar-content">
+        {viewMode === TimeFrames.MONTH && <MonthView />}
+        {viewMode === TimeFrames.WEEK && <WeekView />}
+        {viewMode === TimeFrames.DAY && <DayView />}
+      </div>
     </section>
   )
 }
