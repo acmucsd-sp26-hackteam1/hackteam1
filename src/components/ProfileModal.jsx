@@ -107,7 +107,7 @@ function ProfileModal({ isOpen, onClose }) {
     } else {
       setUsernameError('')
     }
-    
+
     if (hasError) return
 
     const profile = {
@@ -181,7 +181,7 @@ function ProfileModal({ isOpen, onClose }) {
                 setDisplayName(e.target.value)
                 if (nameError) setNameError('')
               }}
-              placeholder="Your legal / full name"
+              placeholder="Your full name"
               autoComplete="name"
             />
             {nameError && (
@@ -200,7 +200,7 @@ function ProfileModal({ isOpen, onClose }) {
                 setUsername(e.target.value)
                 if (usernameError) setUsernameError('')
               }}
-              placeholder="unique_username"
+              placeholder="Type username here"
               autoComplete="username"
             />
             {usernameError && (
@@ -209,7 +209,7 @@ function ProfileModal({ isOpen, onClose }) {
               </p>
             )}
             <span className="create-group-hint">
-              This is how we identify you. It must be unique (3–20 letters, numbers, or underscores).
+              It must be unique (3–20 letters, numbers, and/or underscores).
             </span>
           </label>
 
@@ -218,7 +218,7 @@ function ProfileModal({ isOpen, onClose }) {
             <textarea
               value={aboutMe}
               onChange={(e) => setAboutMe(e.target.value)}
-              placeholder="A short intro about yourself"
+              placeholder="Introduce yourself!"
               rows={4}
             />
           </label>
