@@ -7,6 +7,7 @@ import { DayView } from "../components/calendar/DayView.jsx";
 function CalendarTest() {
 
   const [viewMode, setViewMode] = useState(TimeFrames.MONTH);
+  const [showAvatarSidebar, setShowAvatarSidebar] = useState(false);
 
   return (
     <section className="content-container">
@@ -19,12 +20,13 @@ function CalendarTest() {
         <button onClick={() => {setViewMode(TimeFrames.WEEK)}}>Week View</button>
         <button onClick={() => {setViewMode(TimeFrames.DAY)}}>Day View</button>
       </div>
-      <div className="calendar-content">
-        {viewMode === TimeFrames.MONTH && <MonthView />}
-        {viewMode === TimeFrames.WEEK && <WeekView />}
-        {viewMode === TimeFrames.DAY && <DayView />}
-
-      </div>
+      <CalendarLayout showAvatarSidebar={showAvatarSidebar}>
+        <div className="calendar-content">
+          {viewMode === TimeFrames.MONTH && <MonthView />}
+          {viewMode === TimeFrames.WEEK && <WeekView />}
+          {viewMode === TimeFrames.DAY && <DayView />}
+        </div>
+      </CalendarLayout>
     </section>
   )
 }

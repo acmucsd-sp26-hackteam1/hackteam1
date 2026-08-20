@@ -30,7 +30,12 @@ export const Months = Object.freeze({
     DECEMBER: 11,
 })
 
-export function getMonthName(m) { 
+export function getMonthName(m) {
     let word = Object.keys(Months)[m];
+    return word.charAt(0) + word.slice(1).toLowerCase();
+}
+
+export function getDayName(d) {
+    let word = Object.keys(Weekday)[d];
     return word.charAt(0) + word.slice(1).toLowerCase();
 }

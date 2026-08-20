@@ -1,9 +1,11 @@
-const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+import { Weekday, getDayName } from '../../helpers.js';
 
 export function WeekView() {
   return (
     <div className="week-grid">
-      {DAYS.map(d => <div key={d} className="week-cell">{d}</div>)}
+      {Object.values(Weekday).map(d => (
+        <div key={d} className="week-cell">{getDayName(d)}</div>
+      ))}
     </div>
   );
 }
