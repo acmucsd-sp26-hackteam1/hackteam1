@@ -8,7 +8,7 @@ import CreateTeam from './pages/CreateTeam.jsx'
 import NotFound from './pages/NotFound.jsx'
 import CreateGroupFAB from './components/CreateGroupFAB.jsx'
 
-const CREATE_GROUP_ROUTES = ['/', '/calendartest']
+const CREATE_GROUP_ROUTES = ['/calendartest']
 
 function App() {
   const { pathname } = useLocation()
