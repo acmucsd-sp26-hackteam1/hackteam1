@@ -3,16 +3,16 @@ import { useState } from 'react';
 import { MonthView } from "../components/calendar/MonthView.jsx";
 import { WeekView } from "../components/calendar/WeekView.jsx";
 import { DayView } from "../components/calendar/DayView.jsx";
-import { GROUP_MODAL_TABS, useGroupModal } from '../context/GroupModalContext.jsx';
+import ProfileModal from '../components/ProfileModal.jsx';
 
 function CalendarTest() {
   const [viewMode, setViewMode] = useState(TimeFrames.MONTH);
-  const { openGroupModal } = useGroupModal();
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   return (
     <section className="content-container">
       <div className="view-buttons">
-        <button type="button" onClick={() => openGroupModal(GROUP_MODAL_TABS.JOIN)}>
-          Join Group
+        <button type="button" onClick={() => setIsProfileOpen(true)}>
+          Profile
         </button>
         <button onClick={() => {setViewMode(TimeFrames.MONTH)}}>Month View</button>
         <button onClick={() => {setViewMode(TimeFrames.WEEK)}}>Week View</button>
@@ -23,6 +23,7 @@ function CalendarTest() {
         {viewMode === TimeFrames.WEEK && <WeekView />}
         {viewMode === TimeFrames.DAY && <DayView />}
       </div>
+      <ProfileModal isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
     </section>
   )
 }

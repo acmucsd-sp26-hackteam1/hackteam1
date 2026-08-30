@@ -71,7 +71,7 @@ function CreateGroupFAB() {
         onClick={() => openGroupModal(GROUP_MODAL_TABS.CREATE)}
         aria-label="Create or join a group"
       >
-        + Group
+        Create | Join
       </button>
       {isOpen && (
         <div
