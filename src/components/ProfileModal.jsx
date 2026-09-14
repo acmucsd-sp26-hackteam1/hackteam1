@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
+import { auth } from '../firebase.js'
+import { apiErrorMessage, fetchProfile, fetchProfileByFirebaseUid, getStoredUserId, saveProfile, setStoredUserId } from '../api.js'
 
-const PROFILE_KEY = 'hackteam1.profile'
-const USERNAMES_KEY = 'hackteam1.usernames'
 const USERNAME_PATTERN = /^[a-zA-Z0-9_]{3,20}$/
 
 const emptyProfile = {
@@ -11,63 +11,70 @@ const emptyProfile = {
   avatarDataUrl: '',
 }
 
-function loadProfile() {
-  try {
-    const stored = JSON.parse(localStorage.getItem(PROFILE_KEY))
-    return stored ? { ...emptyProfile, ...stored } : { ...emptyProfile }
-  } catch {
-    return { ...emptyProfile }
-  }
-}
-
-function loadTakenUsernames() {
-  try {
-    const stored = JSON.parse(localStorage.getItem(USERNAMES_KEY))
-    return Array.isArray(stored) ? stored : []
-  } catch {
-    return []
-  }
-}
-
-function isUsernameTaken(username, currentUsername) {
-  const normalized = username.toLowerCase()
-  const current = currentUsername?.toLowerCase() ?? ''
-  return loadTakenUsernames().some(
-    (taken) => taken.toLowerCase() === normalized && taken.toLowerCase() !== current,
-  )
-}
-
-function saveProfile(profile, previousUsername) {
-  const taken = loadTakenUsernames().filter(
-    (name) => name.toLowerCase() !== previousUsername?.toLowerCase(),
-  )
-  if (!taken.some((name) => name.toLowerCase() === profile.username.toLowerCase())) {
-    taken.push(profile.username)
-  }
-  localStorage.setItem(PROFILE_KEY, JSON.stringify(profile))
-  localStorage.setItem(USERNAMES_KEY, JSON.stringify(taken))
-}
-
 function ProfileModal({ isOpen, onClose }) {
   const [displayName, setDisplayName] = useState('')
   const [username, setUsername] = useState('')
   const [aboutMe, setAboutMe] = useState('')
   const [avatarDataUrl, setAvatarDataUrl] = useState('')
-  const [savedUsername, setSavedUsername] = useState('')
+  const [friendId, setFriendId] = useState('')
   const [nameError, setNameError] = useState('')
   const [usernameError, setUsernameError] = useState('')
+  const [formError, setFormError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
   const fileInputRef = useRef(null)
 
   useEffect(() => {
     if (!isOpen) return
-    const profile = loadProfile()
+
+    const profile = { ...emptyProfile }
     setDisplayName(profile.displayName)
     setUsername(profile.username)
     setAboutMe(profile.aboutMe)
     setAvatarDataUrl(profile.avatarDataUrl)
-    setSavedUsername(profile.username)
+    setFriendId('')
     setNameError('')
     setUsernameError('')
+    setFormError('')
+
+    const userId = getStoredUserId()
+    const firebaseUser = auth.currentUser
+    if (!userId && !firebaseUser?.uid) {
+      const firebaseName = firebaseUser?.displayName || ''
+      if (firebaseName) setDisplayName(firebaseName)
+      return
+    }
+
+    let cancelled = false
+    setIsLoading(true)
+    const loadProfile = userId
+      ? fetchProfile(userId)
+      : fetchProfileByFirebaseUid(firebaseUser.uid)
+    loadProfile
+      .then((saved) => {
+        if (cancelled) return
+        setDisplayName(saved.displayName || '')
+        setUsername(saved.username || '')
+        setAboutMe(saved.aboutMe || '')
+        setAvatarDataUrl(saved.avatarDataUrl || '')
+        setFriendId(saved.friendId || '')
+        setStoredUserId(saved.id)
+      })
+      .catch((error) => {
+        if (cancelled) return
+        if (error.response?.status === 404) {
+          if (userId) setStoredUserId('')
+          return
+        }
+        setFormError(apiErrorMessage(error, 'Could not load profile from the server.'))
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false)
+      })
+
+    return () => {
+      cancelled = true
+    }
   }, [isOpen])
 
   if (!isOpen) return null
@@ -83,7 +90,7 @@ function ProfileModal({ isOpen, onClose }) {
     reader.readAsDataURL(file)
   }
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault()
     const trimmedName = displayName.trim()
     const trimmedUsername = username.trim()
@@ -101,23 +108,35 @@ function ProfileModal({ isOpen, onClose }) {
     } else if (!USERNAME_PATTERN.test(trimmedUsername)) {
       setUsernameError('Use 3–20 letters, numbers, or underscores.')
       hasError = true
-    } else if (isUsernameTaken(trimmedUsername, savedUsername)) {
-      setUsernameError('That username is already taken.')
-      hasError = true
     } else {
       setUsernameError('')
     }
 
     if (hasError) return
 
-    const profile = {
-      displayName: trimmedName,
-      username: trimmedUsername,
-      aboutMe: aboutMe.trim(),
-      avatarDataUrl,
+    setIsSaving(true)
+    setFormError('')
+    try {
+      const saved = await saveProfile({
+        id: getStoredUserId() || undefined,
+        displayName: trimmedName,
+        username: trimmedUsername,
+        aboutMe: aboutMe.trim(),
+        avatarDataUrl,
+        firebaseUid: auth.currentUser?.uid || '',
+      })
+      setFriendId(saved.friendId || '')
+      onClose()
+    } catch (error) {
+      const message = apiErrorMessage(error, 'Could not save profile.')
+      if (error.response?.status === 409) {
+        setUsernameError(message)
+      } else {
+        setFormError(message)
+      }
+    } finally {
+      setIsSaving(false)
     }
-    saveProfile(profile, savedUsername)
-    onClose()
   }
 
   return (
@@ -183,6 +202,7 @@ function ProfileModal({ isOpen, onClose }) {
               }}
               placeholder="Your full name"
               autoComplete="name"
+              disabled={isLoading || isSaving}
             />
             {nameError && (
               <p className="create-group-error" role="alert">
@@ -202,6 +222,7 @@ function ProfileModal({ isOpen, onClose }) {
               }}
               placeholder="Type username here"
               autoComplete="username"
+              disabled={isLoading || isSaving}
             />
             {usernameError && (
               <p className="create-group-error" role="alert">
@@ -220,15 +241,28 @@ function ProfileModal({ isOpen, onClose }) {
               onChange={(e) => setAboutMe(e.target.value)}
               placeholder="Introduce yourself!"
               rows={4}
+              disabled={isLoading || isSaving}
             />
           </label>
+
+          {friendId && (
+            <p className="create-group-hint">
+              Your Friend ID is <strong>{friendId}</strong>. Share it so others can invite you to a group.
+            </p>
+          )}
+
+          {formError && (
+            <p className="create-group-error" role="alert">
+              {formError}
+            </p>
+          )}
 
           <div className="create-group-actions">
             <button type="button" className="create-group-cancel" onClick={onClose}>
               Cancel
             </button>
-            <button type="submit" className="create-group-submit">
-              Save Profile
+            <button type="submit" className="create-group-submit" disabled={isLoading || isSaving}>
+              {isSaving ? 'Saving…' : 'Save Profile'}
             </button>
           </div>
         </form>
