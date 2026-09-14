@@ -11,7 +11,6 @@ app.get("/", (req, res) => {
     res.send("Hello World!");
 });
 
-module.exports = app;
 app.get("/api/health", (req, res) => {
     res.json({ ok: true });
 });
