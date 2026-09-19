@@ -5,10 +5,14 @@ import { WeekView } from "../components/calendar/WeekView.jsx";
 import { DayView } from "../components/calendar/DayView.jsx";
 import ProfileModal from '../components/ProfileModal.jsx';
 import { CalendarLayout } from "../components/calendar/CalendarLayout.jsx";
+import { useAuth } from '../context/AuthContext.jsx'
+
 
 function CalendarTest() {
   const [viewMode, setViewMode] = useState(TimeFrames.MONTH);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const { currentUser } = useAuth()
+  console.log('Current user:', currentUser)
   return (
     <section className="content-container">
       <div className="view-buttons">
