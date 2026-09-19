@@ -1,74 +1,29 @@
 import { useEffect, useRef, useState } from 'react'
+import { useAuth } from '../context/AuthContext.jsx'
 
-const PROFILE_KEY = 'hackteam1.profile'
-const USERNAMES_KEY = 'hackteam1.usernames'
 const USERNAME_PATTERN = /^[a-zA-Z0-9_]{3,20}$/
 
-const emptyProfile = {
-  displayName: '',
-  username: '',
-  aboutMe: '',
-  avatarDataUrl: '',
-}
-
-function loadProfile() {
-  try {
-    const stored = JSON.parse(localStorage.getItem(PROFILE_KEY))
-    return stored ? { ...emptyProfile, ...stored } : { ...emptyProfile }
-  } catch {
-    return { ...emptyProfile }
-  }
-}
-
-function loadTakenUsernames() {
-  try {
-    const stored = JSON.parse(localStorage.getItem(USERNAMES_KEY))
-    return Array.isArray(stored) ? stored : []
-  } catch {
-    return []
-  }
-}
-
-function isUsernameTaken(username, currentUsername) {
-  const normalized = username.toLowerCase()
-  const current = currentUsername?.toLowerCase() ?? ''
-  return loadTakenUsernames().some(
-    (taken) => taken.toLowerCase() === normalized && taken.toLowerCase() !== current,
-  )
-}
-
-function saveProfile(profile, previousUsername) {
-  const taken = loadTakenUsernames().filter(
-    (name) => name.toLowerCase() !== previousUsername?.toLowerCase(),
-  )
-  if (!taken.some((name) => name.toLowerCase() === profile.username.toLowerCase())) {
-    taken.push(profile.username)
-  }
-  localStorage.setItem(PROFILE_KEY, JSON.stringify(profile))
-  localStorage.setItem(USERNAMES_KEY, JSON.stringify(taken))
-}
-
 function ProfileModal({ isOpen, onClose }) {
+  const { currentUser } = useAuth()
   const [displayName, setDisplayName] = useState('')
   const [username, setUsername] = useState('')
   const [aboutMe, setAboutMe] = useState('')
   const [avatarDataUrl, setAvatarDataUrl] = useState('')
-  const [savedUsername, setSavedUsername] = useState('')
   const [nameError, setNameError] = useState('')
   const [usernameError, setUsernameError] = useState('')
+  const [saveError, setSaveError] = useState('')
   const fileInputRef = useRef(null)
 
   useEffect(() => {
-    if (!isOpen) return
-    const profile = loadProfile()
-    setDisplayName(profile.displayName)
-    setUsername(profile.username)
-    setAboutMe(profile.aboutMe)
-    setAvatarDataUrl(profile.avatarDataUrl)
-    setSavedUsername(profile.username)
+    if (!isOpen || !currentUser) return
+    setDisplayName(currentUser.displayName || '')
+    setUsername('')
+    setAboutMe('')
+    setAvatarDataUrl(currentUser.photoURL || '')
     setNameError('')
     setUsernameError('')
-  }, [isOpen])
+    setSaveError('')
+  }, [isOpen, currentUser])
 
   if (!isOpen) return null
 
@@ -83,8 +38,13 @@ function ProfileModal({ isOpen, onClose }) {
     reader.readAsDataURL(file)
   }
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault()
+    if (!currentUser) {
+      setSaveError('You must be logged in to save a profile.')
+      return
+    }
+
     const trimmedName = displayName.trim()
     const trimmedUsername = username.trim()
     let hasError = false
@@ -95,14 +55,8 @@ function ProfileModal({ isOpen, onClose }) {
       setNameError('')
     }
 
-    if (!trimmedUsername) {
-      setUsernameError('Username is required.')
-      hasError = true
-    } else if (!USERNAME_PATTERN.test(trimmedUsername)) {
+    if (trimmedUsername && !USERNAME_PATTERN.test(trimmedUsername)) {
       setUsernameError('Use 3–20 letters, numbers, or underscores.')
-      hasError = true
-    } else if (isUsernameTaken(trimmedUsername, savedUsername)) {
-      setUsernameError('That username is already taken.')
       hasError = true
     } else {
       setUsernameError('')
@@ -110,14 +64,25 @@ function ProfileModal({ isOpen, onClose }) {
 
     if (hasError) return
 
-    const profile = {
-      displayName: trimmedName,
-      username: trimmedUsername,
-      aboutMe: aboutMe.trim(),
-      avatarDataUrl,
+    try {
+      const res = await fetch('http://localhost:3000/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          uid: currentUser.uid,
+          displayName: trimmedName,
+          email: currentUser.email,
+          avatar: avatarDataUrl,
+        }),
+      })
+      const data = await res.json()
+      console.log('Profile saved:', data)
+      setSaveError('')
+      onClose()
+    } catch (err) {
+      console.error('Save profile failed:', err)
+      setSaveError('Failed to save profile. Try again.')
     }
-    saveProfile(profile, savedUsername)
-    onClose()
   }
 
   return (
@@ -209,7 +174,7 @@ function ProfileModal({ isOpen, onClose }) {
               </p>
             )}
             <span className="create-group-hint">
-              It must be unique (3–20 letters, numbers, and/or underscores).
+              3–20 letters, numbers, and/or underscores.
             </span>
           </label>
 
@@ -222,6 +187,12 @@ function ProfileModal({ isOpen, onClose }) {
               rows={4}
             />
           </label>
+
+          {saveError && (
+            <p className="create-group-error" role="alert">
+              {saveError}
+            </p>
+          )}
 
           <div className="create-group-actions">
             <button type="button" className="create-group-cancel" onClick={onClose}>
