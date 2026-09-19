@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { GROUP_MODAL_TABS, useGroupModal } from '../context/GroupModalContext.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
 
 const TABS = {
   CREATE: 'create',
@@ -14,6 +15,7 @@ function CreateGroupFAB() {
   const [nameError, setNameError] = useState('')
   const [joinError, setJoinError] = useState('')
   const [createdCode, setCreatedCode] = useState('')
+  const { currentUser } = useAuth()
 
   const resetForm = () => {
     setGroupName('')
@@ -37,6 +39,10 @@ function CreateGroupFAB() {
 
   const handleCreateGroup = async (e) => {
     e.preventDefault()
+    if (!currentUser) {
+      console.error('Must be logged in to create/join a group')
+      return
+    }
     const trimmedName = groupName.trim()
     if (!trimmedName) {
       setNameError('Group name is required.')
@@ -48,7 +54,7 @@ function CreateGroupFAB() {
       const res = await fetch('http://localhost:3000/api/groups', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: trimmedName, userId: 'testuid123' }),
+        body: JSON.stringify({ name: trimmedName, userId: currentUser?.uid }),
       })
       const data = await res.json()
       console.log('Group created:', data)
@@ -61,6 +67,10 @@ function CreateGroupFAB() {
 
   const handleJoinGroup = async (e) => {
     e.preventDefault()
+    if (!currentUser) {
+      console.error('Must be logged in to create/join a group')
+      return
+    }
     const trimmedCode = joinCode.trim()
     if (!trimmedCode) {
       setJoinError('Group code is required.')
@@ -72,7 +82,7 @@ function CreateGroupFAB() {
       const res = await fetch(`http://localhost:3000/api/groups/${trimmedCode}/join`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: 'testuid456' }), // different fake user than the creator
+        body: JSON.stringify({ userId: currentUser?.uid }),
       })
       const data = await res.json()
       console.log('Joined group:', data)
