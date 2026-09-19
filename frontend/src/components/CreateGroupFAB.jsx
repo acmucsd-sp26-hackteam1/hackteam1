@@ -13,6 +13,7 @@ function CreateGroupFAB() {
   const [joinCode, setJoinCode] = useState('')
   const [nameError, setNameError] = useState('')
   const [joinError, setJoinError] = useState('')
+  const [createdCode, setCreatedCode] = useState('')
 
   const resetForm = () => {
     setGroupName('')
@@ -20,6 +21,7 @@ function CreateGroupFAB() {
     setJoinCode('')
     setNameError('')
     setJoinError('')
+    setCreatedCode('')
   }
 
   const closeModal = () => {
@@ -50,11 +52,11 @@ function CreateGroupFAB() {
       })
       const data = await res.json()
       console.log('Group created:', data)
+      setCreatedCode(data.code)
     } catch (err) {
       console.error('Create group failed:', err)
     }
-
-    closeModal()
+    // don't closeModal() yet — want to show the code first
   }
 
   const handleJoinGroup = async (e) => {
@@ -131,6 +133,13 @@ function CreateGroupFAB() {
               </button>
             </div>
             {activeTab === GROUP_MODAL_TABS.CREATE ? (
+              createdCode ? (
+                <div className="create-group-success">
+                  <p>Group created! Your group code:</p>
+                  <p><strong>{createdCode}</strong></p>
+                  <button type="button" onClick={closeModal}>Done</button>
+                </div>
+              ) : (
               <form
                 onSubmit={handleCreateGroup}
                 role="tabpanel"
@@ -176,6 +185,7 @@ function CreateGroupFAB() {
                   </button>
                 </div>
               </form>
+              )
             ) : (
               <form
                 onSubmit={handleJoinGroup}
