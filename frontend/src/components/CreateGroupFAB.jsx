@@ -57,7 +57,7 @@ function CreateGroupFAB() {
     closeModal()
   }
 
-  const handleJoinGroup = (e) => {
+  const handleJoinGroup = async (e) => {
     e.preventDefault()
     const trimmedCode = joinCode.trim()
     if (!trimmedCode) {
@@ -65,7 +65,19 @@ function CreateGroupFAB() {
       return
     }
     setJoinError('')
-    console.log({ groupCode: trimmedCode })
+
+    try {
+      const res = await fetch(`http://localhost:3000/api/groups/${trimmedCode}/join`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: 'testuid456' }), // different fake user than the creator
+      })
+      const data = await res.json()
+      console.log('Joined group:', data)
+    } catch (err) {
+      console.error('Join group failed:', err)
+    }
+
     closeModal()
   }
 
