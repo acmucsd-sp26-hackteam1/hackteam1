@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
-
-const TEST_GROUP_CODE = "6MXG3J"; // TODO: replace with dynamic current group code later
+import { useCurrentGroup } from "../../context/CurrentGroupContext.jsx";
 
 export function AvatarSidebar() {
+    const { currentGroupCode } = useCurrentGroup();
     const [members, setMembers] = useState([]);
 
     useEffect(() => {
+        if (!currentGroupCode) return;
+
         async function fetchGroup() {
             try {
-                const res = await fetch(`http://localhost:3000/api/groups/${TEST_GROUP_CODE}`);
+                const res = await fetch(`http://localhost:3000/api/groups/${currentGroupCode}`);
                 const data = await res.json();
                 console.log("Fetched group for sidebar:", data);
                 setMembers(data.members || []);
@@ -17,7 +19,11 @@ export function AvatarSidebar() {
             }
         }
         fetchGroup();
-    }, []);
+    }, [currentGroupCode]);
+
+    if (!currentGroupCode) {
+        return <div className="avatar-sidebar"><p>No group yet</p></div>;
+    }
 
     return (
         <div className="avatar-sidebar">

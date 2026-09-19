@@ -16,3 +16,14 @@ exports.upsertUser = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+exports.getUser = async (req, res) => {
+    try {
+        const { uid } = req.params;
+        const user = await User.findOne({ uid });
+        if (!user) return res.status(404).json({ error: "User not found" });
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};

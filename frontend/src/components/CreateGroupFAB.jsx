@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { GROUP_MODAL_TABS, useGroupModal } from '../context/GroupModalContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
+import { useCurrentGroup } from '../context/CurrentGroupContext.jsx'
 
 const TABS = {
   CREATE: 'create',
@@ -16,6 +17,7 @@ function CreateGroupFAB() {
   const [joinError, setJoinError] = useState('')
   const [createdCode, setCreatedCode] = useState('')
   const { currentUser } = useAuth()
+  const { setCurrentGroupCode } = useCurrentGroup()
 
   const resetForm = () => {
     setGroupName('')
@@ -59,6 +61,7 @@ function CreateGroupFAB() {
       const data = await res.json()
       console.log('Group created:', data)
       setCreatedCode(data.code)
+      setCurrentGroupCode(data.code)
     } catch (err) {
       console.error('Create group failed:', err)
     }
@@ -86,6 +89,7 @@ function CreateGroupFAB() {
       })
       const data = await res.json()
       console.log('Joined group:', data)
+      setCurrentGroupCode(data.code)
     } catch (err) {
       console.error('Join group failed:', err)
     }
