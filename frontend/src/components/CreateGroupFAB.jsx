@@ -33,7 +33,7 @@ function CreateGroupFAB() {
     setJoinError('')
   }
 
-  const handleCreateGroup = (e) => {
+  const handleCreateGroup = async (e) => {
     e.preventDefault()
     const trimmedName = groupName.trim()
     if (!trimmedName) {
@@ -41,12 +41,19 @@ function CreateGroupFAB() {
       return
     }
     setNameError('')
-    const ids = friendIds
-      .split(/[,\s]+/)
-      .map((id) => id.trim())
-      .filter((id) => /^\d+$/.test(id))
-    
-    console.log({ groupName: trimmedName, friendIds: ids })
+
+    try {
+      const res = await fetch('http://localhost:3000/api/groups', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: trimmedName, userId: 'testuid123' }),
+      })
+      const data = await res.json()
+      console.log('Group created:', data)
+    } catch (err) {
+      console.error('Create group failed:', err)
+    }
+
     closeModal()
   }
 
