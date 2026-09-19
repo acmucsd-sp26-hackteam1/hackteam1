@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { GROUP_MODAL_TABS, useGroupModal } from '../context/GroupModalContext.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
+import { useCurrentGroup } from '../context/CurrentGroupContext.jsx'
 
 const TABS = {
   CREATE: 'create',
@@ -13,6 +15,9 @@ function CreateGroupFAB() {
   const [joinCode, setJoinCode] = useState('')
   const [nameError, setNameError] = useState('')
   const [joinError, setJoinError] = useState('')
+  const [createdCode, setCreatedCode] = useState('')
+  const { currentUser } = useAuth()
+  const { setCurrentGroupCode } = useCurrentGroup()
 
   const resetForm = () => {
     setGroupName('')
@@ -20,6 +25,7 @@ function CreateGroupFAB() {
     setJoinCode('')
     setNameError('')
     setJoinError('')
+    setCreatedCode('')
   }
 
   const closeModal = () => {
@@ -33,32 +39,61 @@ function CreateGroupFAB() {
     setJoinError('')
   }
 
-  const handleCreateGroup = (e) => {
+  const handleCreateGroup = async (e) => {
     e.preventDefault()
+    if (!currentUser) {
+      console.error('Must be logged in to create/join a group')
+      return
+    }
     const trimmedName = groupName.trim()
     if (!trimmedName) {
       setNameError('Group name is required.')
       return
     }
     setNameError('')
-    const ids = friendIds
-      .split(/[,\s]+/)
-      .map((id) => id.trim())
-      .filter((id) => /^\d+$/.test(id))
-    
-    console.log({ groupName: trimmedName, friendIds: ids })
-    closeModal()
+
+    try {
+      const res = await fetch('http://localhost:3000/api/groups', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: trimmedName, userId: currentUser?.uid }),
+      })
+      const data = await res.json()
+      console.log('Group created:', data)
+      setCreatedCode(data.code)
+      setCurrentGroupCode(data.code)
+    } catch (err) {
+      console.error('Create group failed:', err)
+    }
+    // don't closeModal() yet — want to show the code first
   }
 
-  const handleJoinGroup = (e) => {
+  const handleJoinGroup = async (e) => {
     e.preventDefault()
+    if (!currentUser) {
+      console.error('Must be logged in to create/join a group')
+      return
+    }
     const trimmedCode = joinCode.trim()
     if (!trimmedCode) {
       setJoinError('Group code is required.')
       return
     }
     setJoinError('')
-    console.log({ groupCode: trimmedCode })
+
+    try {
+      const res = await fetch(`http://localhost:3000/api/groups/${trimmedCode}/join`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: currentUser?.uid }),
+      })
+      const data = await res.json()
+      console.log('Joined group:', data)
+      setCurrentGroupCode(data.code)
+    } catch (err) {
+      console.error('Join group failed:', err)
+    }
+
     closeModal()
   }
 
@@ -112,6 +147,13 @@ function CreateGroupFAB() {
               </button>
             </div>
             {activeTab === GROUP_MODAL_TABS.CREATE ? (
+              createdCode ? (
+                <div className="create-group-success">
+                  <p>Group created! Your group code:</p>
+                  <p><strong>{createdCode}</strong></p>
+                  <button type="button" onClick={closeModal}>Done</button>
+                </div>
+              ) : (
               <form
                 onSubmit={handleCreateGroup}
                 role="tabpanel"
@@ -157,6 +199,7 @@ function CreateGroupFAB() {
                   </button>
                 </div>
               </form>
+              )
             ) : (
               <form
                 onSubmit={handleJoinGroup}
