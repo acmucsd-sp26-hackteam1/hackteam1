@@ -3,22 +3,35 @@ import { useCurrentGroup } from "../../context/CurrentGroupContext.jsx";
 
 export function AvatarSidebar() {
     const { currentGroupCode } = useCurrentGroup();
-    const [members, setMembers] = useState([]);
+    const [memberProfiles, setMemberProfiles] = useState([]);
 
     useEffect(() => {
         if (!currentGroupCode) return;
 
-        async function fetchGroup() {
+        async function fetchGroupAndMembers() {
             try {
                 const res = await fetch(`http://localhost:3000/api/groups/${currentGroupCode}`);
-                const data = await res.json();
-                console.log("Fetched group for sidebar:", data);
-                setMembers(data.members || []);
+                const group = await res.json();
+                console.log("Fetched group for sidebar:", group);
+
+                const profiles = await Promise.all(
+                    (group.members || []).map(async (uid) => {
+                        try {
+                            const userRes = await fetch(`http://localhost:3000/api/users/${uid}`);
+                            if (!userRes.ok) return { uid, avatar: null };
+                            const user = await userRes.json();
+                            return { uid, avatar: user.avatar };
+                        } catch {
+                            return { uid, avatar: null };
+                        }
+                    })
+                );
+                setMemberProfiles(profiles);
             } catch (err) {
                 console.error("Failed to fetch group for sidebar:", err);
             }
         }
-        fetchGroup();
+        fetchGroupAndMembers();
     }, [currentGroupCode]);
 
     if (!currentGroupCode) {
@@ -27,9 +40,12 @@ export function AvatarSidebar() {
 
     return (
         <div className="avatar-sidebar">
-            {members.map((memberId) => (
-                <div className="avatar-circle" key={memberId}>
-                    <img src="https://dummyimage.com/40x40/cccccc/000000&text=?" alt={memberId} />
+            {memberProfiles.map(({ uid, avatar }) => (
+                <div className="avatar-circle" key={uid}>
+                    <img
+                        src={avatar || "https://dummyimage.com/40x40/cccccc/000000&text=?"}
+                        alt={uid}
+                    />
                 </div>
             ))}
         </div>
