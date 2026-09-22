@@ -650,11 +650,11 @@ $ucsd-blue-bright: #5eb3f0;
   gap: 10px;
 }
 
-.username-input, .password-input {
+.email-input, .password-input {
   color: white;
 }
 
-.username-box, .password-box {
+.email-box, .password-box {
   padding: 0.4rem 0.5rem;
   width: 100%;
   color: black;
@@ -685,6 +685,7 @@ $ucsd-blue-bright: #5eb3f0;
   border-radius: 8px;
   margin-top: 30px;
   margin-bottom: 10px;
+  transition: all 0.2s ease-in-out;
   cursor: pointer;
 
   &:hover {
@@ -709,11 +710,38 @@ $ucsd-blue-bright: #5eb3f0;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    transition: all 0.2s ease-in-out;
     
     &:hover {
       color: rgb(184, 184, 184);
     }
   }
 
-  
+}
+
+.login-link, .register-link {
+  color: white;
+  font-size: 0.9rem;
+
+  a {
+    text-decoration: none;
+    color: $ucsd-navy;
+    font-weight: bold;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+
+    &:hover {
+      color: $ucsd-blue;
+    }
+  }
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
 }
