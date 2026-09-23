@@ -715,5 +715,113 @@ $ucsd-blue-bright: #5eb3f0;
     }
   }
 
-  
+}
+
+/* Calendar Avatars */
+
+.avatar-circle {
+  border: none;
+  cursor: pointer;
+}
+
+.avatar-circle.inactive {
+  opacity: 0.35;
+}
+
+.avatar-circle.active {
+  opacity: 1;
+}
+
+.avatar-circle:disabled {
+  cursor: default;
+}
+
+/* Add Event Modal */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.add-event-modal {
+  background: #fff;
+  width: 420px;
+  max-width: 90%;
+  padding: 28px;
+  border-radius: 16px;
+  border: 1px solid #222;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  color: #222;
+}
+
+.add-event-modal h2 {
+  margin: 0 0 24px;
+  font-size: 1.7rem;
+}
+
+.add-event-modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.add-event-modal form > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.add-event-modal label,
+.add-event-modal p {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.add-event-modal input[type="text"],
+.add-event-modal input[type="time"] {
+  padding: 10px 12px;
+  border: 1px solid #aaa;
+  border-radius: 7px;
+  font: inherit;
+}
+
+.day-options {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap;
+  gap: 10px !important;
+}
+
+.day-options label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: normal;
+}
+
+.modal-buttons {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: flex-end;
+  gap: 10px !important;
+  margin-top: 8px;
+}
+
+.modal-buttons button {
+  padding: 9px 16px;
+  border: 1px solid #222;
+  border-radius: 7px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.modal-buttons button:last-child {
+  background: #222;
+  color: white;
 }
