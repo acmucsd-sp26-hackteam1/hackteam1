@@ -5,7 +5,7 @@ const profilesRouter = require("./routes/profiles");
 const app = express();
 
 app.use(cors());
-app.use(express.json({ limit: "2mb" }));
+app.use(express.json({ limit: "10mb" }));
 
 app.get("/", (req, res) => {
     res.send("Hello World!");
@@ -14,6 +14,12 @@ app.get("/", (req, res) => {
 app.get("/api/health", (req, res) => {
     res.json({ ok: true });
 });
+
+const groupRoutes = require("./routes/groupRoutes");
+app.use("/api/groups", groupRoutes);
+
+const userRoutes = require("./routes/userRoutes");
+app.use("/api/users", userRoutes);
 
 app.use("/api/profiles", profilesRouter);
 

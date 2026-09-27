@@ -1,4 +1,4 @@
-import { TimeFrames } from'../helpers.js';
+import { TimeFrames } from '../helpers.js';
 import { useState } from 'react';
 import { MonthView } from '../components/calendar/MonthView.jsx';
 import { WeekView } from '../components/calendar/WeekView.jsx';
@@ -6,8 +6,10 @@ import { DayView } from '../components/calendar/DayView.jsx';
 import { CalendarLayout } from '../components/calendar/CalendarLayout.jsx';
 import ProfileModal from '../components/ProfileModal.jsx';
 import AddEventModal from '../components/AddEventModal.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 
 function CalendarTest() {
+  const { currentUser } = useAuth();
   const [viewMode, setViewMode] = useState(TimeFrames.MONTH);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isAddEventOpen, setIsAddEventOpen] = useState(false);
@@ -29,8 +31,6 @@ function CalendarTest() {
         },
       ],
     },
-
-
     {
       id: "friend",
       name: "Friend",
@@ -45,7 +45,6 @@ function CalendarTest() {
           endTime: "15:20",
           location: "WLH 2005",
         },
-
         {
           id: "3",
           name: "CSE 110",
@@ -56,8 +55,6 @@ function CalendarTest() {
         },
       ],
     },
-
-
     {
       id: "friend2",
       name: "Friend 2",
@@ -72,7 +69,6 @@ function CalendarTest() {
           endTime: "15:20",
           location: "WLH 2005",
         },
-
         {
           id: "4",
           name: "CSE 110",
@@ -81,7 +77,6 @@ function CalendarTest() {
           endTime: "15:20",
           location: "WLH 2005",
         },
-
         {
           id: "5",
           name: "Meet up with friends",
@@ -102,12 +97,10 @@ function CalendarTest() {
     if (calendarId === "me") {
       return;
     }
-
     setVisibleCalendarIds((currentIds) => {
       if (currentIds.includes(calendarId)) {
         return currentIds.filter((id) => id !== calendarId);
       }
-
       return [...currentIds, calendarId];
     });
   }
@@ -122,10 +115,7 @@ function CalendarTest() {
         if (calendar.id === "me") {
           return {
             ...calendar,
-            entries: [
-              ...calendar.entries,
-              newEvent
-            ],
+            entries: [...calendar.entries, newEvent],
           };
         }
         return calendar;
@@ -136,41 +126,16 @@ function CalendarTest() {
   return (
     <section className="content-container">
       <div className="view-buttons">
-        <p>Modal open: {isAddEventOpen ? "YES" : "NO"}</p>
-        <button
-          type="button"
-          onClick={() => setIsProfileOpen(true)}
-        >
+        <button type="button" onClick={() => setIsProfileOpen(true)}>
           Profile
         </button>
-
-        <button
-          onClick={() => setViewMode(TimeFrames.MONTH)}
-        >
-          Month View
-        </button>
-
-        <button
-          onClick={() => setViewMode(TimeFrames.WEEK)}
-        >
-          Week View
-        </button>
-
-        <button
-          onClick={() => setViewMode(TimeFrames.DAY)}
-        >
-          Day View
-        </button>
-        
-        <button
-          type="button"
-          onClick={() => setIsAddEventOpen(true)}
-        >
+        <button onClick={() => setViewMode(TimeFrames.MONTH)}>Month View</button>
+        <button onClick={() => setViewMode(TimeFrames.WEEK)}>Week View</button>
+        <button onClick={() => setViewMode(TimeFrames.DAY)}>Day View</button>
+        <button type="button" onClick={() => setIsAddEventOpen(true)}>
           + Add Event
         </button>
       </div>
-
-      
 
       <CalendarLayout
         showAvatarSidebar
@@ -178,17 +143,9 @@ function CalendarTest() {
         visibleCalendarIds={visibleCalendarIds}
         onToggleCalendar={toggleCalendar}
       >
-        {viewMode === TimeFrames.MONTH && (
-          <MonthView calendars={visibleCalendars} />
-        )}
-
-        {viewMode === TimeFrames.WEEK && (
-          <WeekView calendars={visibleCalendars} />
-        )}
-
-        {viewMode === TimeFrames.DAY && (
-          <DayView calendars={visibleCalendars} />
-        )}
+        {viewMode === TimeFrames.MONTH && <MonthView calendars={visibleCalendars} />}
+        {viewMode === TimeFrames.WEEK && <WeekView calendars={visibleCalendars} />}
+        {viewMode === TimeFrames.DAY && <DayView calendars={visibleCalendars} />}
       </CalendarLayout>
 
       <AddEventModal
@@ -197,10 +154,7 @@ function CalendarTest() {
         onAddEvent={addEvent}
       />
 
-      <ProfileModal
-        isOpen={isProfileOpen}
-        onClose={() => setIsProfileOpen(false)}
-      />
+      <ProfileModal isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
     </section>
   );
 }
