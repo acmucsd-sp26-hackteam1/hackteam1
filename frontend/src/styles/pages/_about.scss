@@ -58,7 +58,7 @@
   height: 275px;
   padding: 24px;
   background-color: $color-glass;
-  border-radius: $radius-panel;
+  border-radius: $radius-large;
   text-align: center;
   font-size: 30px;
 }
@@ -81,7 +81,7 @@
   width: 374px;
   padding: 36px 30px;
   background-color: $color-glass;
-  border-radius: $radius-panel;
+  border-radius: $radius-large;
   text-align: center;
   font-size: 23px;
 
@@ -95,6 +95,6 @@
     object-fit: contain;
     background-color: #fff;
     border: $border-thin;
-    border-radius: 22px;
+    border-radius: $radius-small;
   }
 }

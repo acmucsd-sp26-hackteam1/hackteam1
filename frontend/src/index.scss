@@ -146,7 +146,7 @@ body {
     margin: 12px 0 0;
     padding: 8px 20px;
     background-color: $color-glass;
-    border-radius: $radius-cell;
+    border-radius: $radius-small;
     font-size: 20px;
   }
 }
@@ -200,7 +200,7 @@ body {
   gap: 16px;
   padding: 28px 20px;
   background-color: $color-glass;
-  border-radius: $radius-panel;
+  border-radius: $radius-large;
 }
 
 .htu-row {
@@ -223,7 +223,7 @@ body {
   background-color: white; 
   color: black;
   border: $border-thin;
-  border-radius: 22px; 
+  border-radius: $radius-small; 
   display: flex; 
   align-items: center; 
   justify-content: center; 
@@ -298,7 +298,7 @@ $ucsd-blue-bright: #5eb3f0;
   color: $color-text;
   background: $color-olive;
   border: $border-thick;
-  border-radius: 999px;
+  border-radius: $radius-pill;
   cursor: pointer;
   box-shadow: $shadow-popup;
   transition: background 0.2s;
@@ -327,7 +327,7 @@ $ucsd-blue-bright: #5eb3f0;
   color: $color-text;
   background: #fff;
   border: $border-thick;
-  border-radius: $radius-panel;
+  border-radius: $radius-large;
   box-shadow: $shadow-popup;
 
   h2 {
@@ -360,7 +360,7 @@ $ucsd-blue-bright: #5eb3f0;
     color: $color-text;
     background: #fff;
     border: $border-thin;
-    border-radius: 999px;
+    border-radius: $radius-pill;
     margin-bottom: 0;
     cursor: pointer;
     transition: background 0.2s;
@@ -393,7 +393,7 @@ $ucsd-blue-bright: #5eb3f0;
     color: inherit;
     background: #fff;
     border: $border-thin;
-    border-radius: $radius-field;
+    border-radius: $radius-small;
     resize: vertical;
 
     &::placeholder {
@@ -434,7 +434,7 @@ $ucsd-blue-bright: #5eb3f0;
   font-size: 14px;
   font-weight: 700;
   color: $color-text;
-  border-radius: 999px;
+  border-radius: $radius-pill;
   cursor: pointer;
   border: $border-thin;
 }
@@ -467,19 +467,23 @@ $ucsd-blue-bright: #5eb3f0;
 .week-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 6px;
-  padding: 6px;
+  gap: 0;
+  padding: 0;
 }
 
 .week-cell {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  border: $border-thin;
-  border-radius: $radius-cell;
+  border-right: $border-thin;
+  border-bottom: $border-thin;
   background-color: $color-glass;
   padding: 8px;
   text-align: left;
+
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 /*
@@ -499,7 +503,7 @@ $ucsd-blue-bright: #5eb3f0;
   gap: 10px;
   padding: 10px;
   border: $border-thin;
-  border-radius: $radius-cell;
+  border-radius: $radius-small;
   min-height: 40px;
 }
 
@@ -560,7 +564,7 @@ $ucsd-blue-bright: #5eb3f0;
   color: $color-text;
   background: #fff;
   border: $border-thick;
-  border-radius: $radius-panel;
+  border-radius: $radius-large;
   box-shadow: $shadow-popup;
   h2 {
     margin: 0 0 1rem;
@@ -594,7 +598,7 @@ $ucsd-blue-bright: #5eb3f0;
   padding: 12px;
   background: $color-lemon;
   border: $border-thick;
-  border-radius: $radius-card;
+  border-radius: $radius-small;
 }
 .profile-avatar-preview {
   width: 120px;
@@ -629,7 +633,7 @@ $ucsd-blue-bright: #5eb3f0;
   color: $color-text;
   background: $color-olive;
   border: $border-thin;
-  border-radius: 999px;
+  border-radius: $radius-pill;
   cursor: pointer;
   font-weight: 700;
   &:hover {
@@ -681,7 +685,7 @@ $ucsd-blue-bright: #5eb3f0;
   max-height: 90vh;
   background-color: $color-glass;
   border: $border-thick;
-  border-radius: $radius-panel;
+  border-radius: $radius-large;
   color: $color-text;
   display: flex;
   flex-direction: column;
@@ -725,7 +729,7 @@ $ucsd-blue-bright: #5eb3f0;
   text-align: left;
   box-sizing: border-box;
   outline: none;
-  border-radius: 999px;
+  border-radius: $radius-pill;
 }
 
 .google-section {
@@ -745,7 +749,7 @@ $ucsd-blue-bright: #5eb3f0;
   text-align: center;
   box-sizing: border-box;
   outline: none;
-  border-radius: 999px;
+  border-radius: $radius-pill;
   margin-top: 30px;
   margin-bottom: 10px;
   cursor: pointer;

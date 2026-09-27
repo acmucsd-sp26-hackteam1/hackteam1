@@ -1,7 +1,7 @@
 @use '../tokens' as *;
 
 .calendar-header {
-  padding: 34px 24px 40px;
+  padding: $space;
   background-color: $color-sky;
   border-bottom: $border-thick;
   text-align: center;
@@ -30,10 +30,11 @@
   font-size: 24px;
 }
 
-.calendar-page {
+.content-container.calendar-page {
   display: grid;
   grid-template-columns: 411px 1fr;
-  gap: 12px;
+  gap: $space;
+  padding: $space;
   border-bottom: $border-thick;
 
   @media (max-width: 1100px) {
@@ -44,7 +45,7 @@
 .calendar-sidebar {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: $space;
 
   h2 {
     margin: 0;
@@ -58,7 +59,7 @@
 
 .agenda-panel {
   @include panel;
-  padding: 16px 20px 20px;
+  padding: $space;
 
   h3 {
     margin: 0;
@@ -181,8 +182,12 @@
   gap: 4px;
   height: 98px;
   padding: 8px;
-  border: $border-thin;
-  border-radius: $radius-cell;
+  border-right: $border-thin;
+  border-bottom: $border-thin;
+
+  &:nth-last-child(-n + 7) {
+    border-bottom: none;
+  }
 }
 
 .month-day-cell-right-half {
@@ -222,7 +227,7 @@
 .week-event {
   padding: 8px;
   border: $border-thin;
-  border-radius: $radius-cell;
+  border-radius: $radius-small;
   font-size: 13px;
 
   p {
@@ -292,10 +297,9 @@
 }
 
 .group-code {
-  margin: auto 0 0;
+  margin: auto 0 -4px;
   padding: 2px 12px;
   background-color: #fff;
-  border: 2px solid $color-avatar-outline;
   border-radius: $radius-pill;
   text-align: center;
   font-size: 12px;

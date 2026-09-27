@@ -28,20 +28,18 @@ $font-footer: 'Readex Pro', 'Inter', sans-serif;
 $border-thick: 2px solid $color-border;
 $border-thin: 1px solid $color-border;
 
-$radius-panel: 38px;
-$radius-card: 28px;
-$radius-field: 20px;
-$radius-cell: 12px;
-$radius-badge: 6px;
+$radius-large: 24px;
+$radius-small: 10px;
 $radius-pill: 999px;
 
 $page-width: 1536px;
+$space: 20px;
 $shadow-popup: 0 12px 12px rgba(0, 0, 0, 0.25);
 
 @mixin panel {
   background-color: $color-glass;
   border: $border-thick;
-  border-radius: $radius-panel;
+  border-radius: $radius-large;
 }
 
 @mixin pill-button($background: $color-olive) {
