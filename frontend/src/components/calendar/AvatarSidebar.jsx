@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useCurrentGroup } from "../../context/CurrentGroupContext.jsx";
 
-export function AvatarSidebar() {
-    const { currentGroupCode } = useCurrentGroup();
+export function AvatarSidebar({ visibleCalendarIds, onToggleCalendar }) {
+    const { currentGroupCode, profileVersion } = useCurrentGroup();
     const [memberProfiles, setMemberProfiles] = useState([]);
 
     useEffect(() => {
@@ -12,17 +12,16 @@ export function AvatarSidebar() {
             try {
                 const res = await fetch(`http://localhost:3000/api/groups/${currentGroupCode}`);
                 const group = await res.json();
-                console.log("Fetched group for sidebar:", group);
 
                 const profiles = await Promise.all(
                     (group.members || []).map(async (uid) => {
                         try {
                             const userRes = await fetch(`http://localhost:3000/api/users/${uid}`);
-                            if (!userRes.ok) return { uid, avatar: null };
+                            if (!userRes.ok) return { uid, avatar: null, displayName: uid };
                             const user = await userRes.json();
-                            return { uid, avatar: user.avatar };
+                            return { uid, avatar: user.avatar, displayName: user.displayName || uid };
                         } catch {
-                            return { uid, avatar: null };
+                            return { uid, avatar: null, displayName: uid };
                         }
                     })
                 );
@@ -32,7 +31,7 @@ export function AvatarSidebar() {
             }
         }
         fetchGroupAndMembers();
-    }, [currentGroupCode]);
+    }, [currentGroupCode, profileVersion]);
 
     if (!currentGroupCode) {
         return <div className="avatar-sidebar"><p>No group yet</p></div>;
@@ -40,14 +39,23 @@ export function AvatarSidebar() {
 
     return (
         <div className="avatar-sidebar">
-            {memberProfiles.map(({ uid, avatar }) => (
-                <div className="avatar-circle" key={uid}>
-                    <img
-                        src={avatar || "https://dummyimage.com/40x40/cccccc/000000&text=?"}
-                        alt={uid}
-                    />
-                </div>
-            ))}
+            {memberProfiles.map(({ uid, avatar, displayName }) => {
+                const isVisible = visibleCalendarIds?.includes(uid) ?? true;
+                return (
+                    <div key={uid} className="avatar-row">
+                        <button
+                            className={`avatar-circle ${isVisible ? "active" : "inactive"}`}
+                            onClick={() => onToggleCalendar?.(uid)}
+                        >
+                            <img
+                                src={avatar || "https://dummyimage.com/40x40/cccccc/000000&text=?"}
+                                alt={displayName}
+                            />
+                        </button>
+                        <span>{displayName}</span>
+                    </div>
+                );
+            })}
         </div>
     );
 }

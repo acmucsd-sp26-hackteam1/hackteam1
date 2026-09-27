@@ -4,13 +4,13 @@ import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase.js';
 import ucsdTriton from "../assets/uc_san_diego_tritons_logo_secondary_2018_sportslogosnet-1765.png";
 import { FaArrowLeftLong } from "react-icons/fa6";
-import { doSignInWithEmailAndPassword } from "../auth/auth.js";
+import { doCreateUserWithEmailAndPassword } from "../auth/auth.js";
 
-function Login() {
+function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-
+  
   const handleGoogleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
@@ -21,13 +21,13 @@ function Login() {
       console.error('google sign-in failed', err);
     }
   };
- 
-  const handleLogin = async (e) => {
+
+  const handleRegister = async (e) => {
     e.preventDefault();
 
     try {
-      await doSignInWithEmailAndPassword(email, password);
-      console.log("Logged in")
+      await doCreateUserWithEmailAndPassword(email, password);
+      console.log("Account created")
       navigate("/");
     }
     catch (err) {
@@ -45,33 +45,33 @@ function Login() {
         <div className="login-column">
           <div className="login-box">
             <div className="title">UCSDTime</div>
-            <div className="login-title">Login</div>
-            < div className = "register-link">Don't have an account? <Link to = "/register"> Register here</Link></div>
+            <div className="login-title">Create an account</div>
+            < div className = "login-link">Have an account? <Link to = "/login"> Login here</Link></div>
            
-            <form onSubmit={handleLogin}>
-              <div className="input-section">
-                <div className="email-input">
-                  <div>Email</div>
-                  <input
-                  className="email-box"
-                  type="email"
-                  value = {email}
-                  onChange = {(e) => setEmail(e.target.value)}
-                  required />
+            <form onSubmit = {handleRegister}>
+                <div className="input-section">
+                    <div className="email-input">
+                        <div>Email</div>
+                        <input
+                        className="email-box"
+                        type="email"
+                        value = {email}
+                        onChange = {(e) => setEmail(e.target.value)}
+                        required />
+                    </div>
+
+                    <div className="password-input">
+                        <div>Password</div>
+                        <input
+                        className="password-box"
+                        type="password"
+                        value = {password}
+                        onChange = {(e) => setPassword(e.target.value)}
+                        required />
+                    </div>
                 </div>
 
-                <div className="password-input">
-                  <div>Password</div>
-                  <input
-                  className="password-box"
-                  type="password"
-                  value = {password}
-                  onChange = {(e) => setPassword(e.target.value)}
-                  required />
-                </div>
-              </div>
-
-              <button className="login-btn" type="submit">SIGN IN</button>
+                <button className="login-btn" type="submit">SIGN UP</button>
             </form>
 
             <div className="google-section">
@@ -110,4 +110,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;
