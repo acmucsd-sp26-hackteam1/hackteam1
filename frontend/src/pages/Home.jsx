@@ -1,4 +1,7 @@
-import geiselLibrary from "../assets/ucsd-library-night-photo-20180-753838.jpg";
+import geiselLibrary from "../assets/home/geisel.png";
+import googleIcon from "../assets/icons/google.png";
+import calendarPicture from "../assets/home/how-to-calendar.png";
+import friendsPicture from "../assets/home/how-to-friends.png";
 import HowToUseBox from "../components/HowToUseBox";
 
 function Home() {
@@ -7,22 +10,32 @@ function Home() {
     <section className="hero-section">
       <img src={geiselLibrary} alt="A picture of Geisel Library at UCSD" className="hero-image"/>
       <div className="hero-content">
-        <h1>UCSD Time (Not Official Title)</h1>
+        <h1>UCSD Time</h1>
         <p>A place to coordinate classes with your friends. <br/>Easily share your calendar, see who is free, and plan your days together!</p>
       </div>
     </section>
 
     <section className="htu-section">
       <div className="htu-content">
+        <h1>How To Use UCSDTime!</h1>
+        <p>Here are easy step-by-step instructions</p>
+        <p>Any questions or problems, please contact us at hackteam1@gmail.com</p>
+        {/*
         <h1>How to Use</h1>
         <p>This is how you use our website!</p>
+        */}
       </div>
 
 
       <div className="htu-container">
+        <HowToUseBox number = "01" picture = {<img src={googleIcon} alt="Google logo" />} label = "Login through a google account" info = "So you can save your calendars, groups, and friends" />
+        <HowToUseBox number = "02" picture = {<img src={calendarPicture} alt="Calendar icon" />} label = "Now create and update your calendar" info = "Make sure the dates and times are right!" />
+        <HowToUseBox number = "03" picture = {<img src={friendsPicture} alt="Friends high-fiving" />} label = "Lastly, add your friends and create groups!" info = "You can now schedule hangouts and meetings together" />
+        {/*
         <HowToUseBox number = "01" picture = "[insert pic of log in]" label = "Log In" info = "Log in to start planning your semester with friends." />
         <HowToUseBox number = "02" picture = "[insert pic of calendar]" label = "Access Personal Calendar" info = "Link your work and personal schedules." />
         <HowToUseBox number = "03" picture = "[insert pic of friends list]" label = "Invite & Organize" info = "Create a group or join an exisiting circle. Find the perfect window for everyone without any hassle!" />
+        */}
       </div>
     </section>
 
