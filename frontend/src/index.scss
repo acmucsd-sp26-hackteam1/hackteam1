@@ -580,3 +580,140 @@ $ucsd-blue-bright: #5eb3f0;
     box-shadow: 0 0 10px rgba($ucsd-blue-bright, 0.5);
   }
 }
+
+/* Login Page */
+
+.login-section {
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient($ucsd-blue-bright, $ucsd-navy);
+}
+
+.login-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  width: 100%;
+  max-width: 1100px;
+}
+
+.img-column {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.triton-img {
+  max-width: 100%;
+  height: auto;
+}
+
+.login-column {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.login-box {
+  width: 25rem;
+  min-height: 28rem;
+  max-height: 90vh;
+  background-color: transparentize(white, 0.75);
+  border-radius: 15px;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.title {
+  color: white;
+  font-size: 1.5rem;
+}
+
+.login-title {
+  color: white;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.input-section {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+  gap: 10px;
+}
+
+.username-input, .password-input {
+  color: white;
+}
+
+.username-box, .password-box {
+  padding: 0.4rem 0.5rem;
+  width: 100%;
+  color: black;
+  border: none;
+  font-size: 1rem;
+  text-align: left;
+  box-sizing: border-box;
+  outline: none;
+  border-radius: 8px;
+}
+
+.google-section {
+  text-align: center;
+  font-size: 0.85rem;
+  color: white;
+}
+
+.login-btn {
+  padding: 0.4rem 0;
+  width: 100%;
+  color: white;
+  background-color: $ucsd-navy;
+  border: none;
+  font-size: 1rem;
+  text-align: center;
+  box-sizing: border-box;
+  outline: none;
+  border-radius: 8px;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $ucsd-blue;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.gsi-material-button {
+  border-radius: 8px;
+}
+
+.return-home {
+  text-align: center;
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  
+  a {
+    text-decoration: none;
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    &:hover {
+      color: rgb(184, 184, 184);
+    }
+  }
+
+  
+}
