@@ -21,6 +21,9 @@ app.use("/api/groups", groupRoutes);
 const userRoutes = require("./routes/userRoutes");
 app.use("/api/users", userRoutes);
 
+const eventRoutes = require("./routes/eventRoutes");
+app.use("/api/events", eventRoutes);
+
 app.use("/api/profiles", profilesRouter);
 
 module.exports = app;

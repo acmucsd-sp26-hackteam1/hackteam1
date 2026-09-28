@@ -19,10 +19,10 @@ function App() {
   const showCreateGroup = CREATE_GROUP_ROUTES.includes(pathname)
 
   const hideNav = 
-  location.pathname === "/login" ||
-  location.pathname === "/register"
+    pathname === "/login" ||
+    pathname === "/register"
 
-  const { userLoggedIn } = useAuth();
+  const { currentUser } = useAuth();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -44,7 +44,7 @@ function App() {
             <Link to="/about">About</Link>
             <Link to="/calendartest">Test Calendar</Link>
 
-            {userLoggedIn ? (
+            {currentUser ? (
               <button onClick = {handleSignOut} className = "nav-login logout-btn">
                 Sign Out
               </button>
