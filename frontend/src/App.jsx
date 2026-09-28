@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import About from './pages/About.jsx'
@@ -18,12 +19,32 @@ function App() {
   const { pathname } = useLocation()
   const showCreateGroup = CREATE_GROUP_ROUTES.includes(pathname)
 
-  const hideNav = 
-  location.pathname === "/login" ||
-  location.pathname === "/register"
+  const hideNav = pathname === "/login" || pathname === "/register"
 
-  const { userLoggedIn } = useAuth();
+  const { currentUser, authLoading } = useAuth()
+  const [userProfile, setUserProfile] = useState(null)
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!currentUser) return
+
+    let active = true
+    fetch(`http://localhost:3000/api/users/${encodeURIComponent(currentUser.uid)}`)
+      .then(async (response) => {
+        if (response.status === 404) return null
+        const profile = await response.json().catch(() => ({}))
+        if (!response.ok) throw new Error(profile.error || 'Could not load profile.')
+        return profile
+      })
+      .then((profile) => {
+        if (active) setUserProfile(profile)
+      })
+      .catch((error) => console.error('Could not load account profile:', error))
+
+    return () => {
+      active = false
+    }
+  }, [currentUser])
 
   const handleSignOut = async () => {
     try {
@@ -34,23 +55,36 @@ function App() {
     }
   }
 
+  const displayedProfile = userProfile?.uid === currentUser?.uid ? userProfile : null
+
   return (
     <GroupModalProvider>
       <div className="content">
         {!hideNav && (
           <nav className="nav">
-            <span className="nav-spacer" />
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-            <Link to="/calendartest">Test Calendar</Link>
+            <div className="nav-links">
+              <Link to="/">Home</Link>
+              <Link to="/about">About</Link>
+              <Link to="/calendartest">Calendar</Link>
+            </div>
 
-            {userLoggedIn ? (
-              <button onClick = {handleSignOut} className = "nav-login logout-btn">
-                Sign Out
-              </button>
-            ) : (
-              <Link to="/login" className="nav-login">Login</Link>
-            )}
+            <div className="nav-account">
+              {authLoading ? null : currentUser ? (
+                <>
+                  <span className="nav-user">
+                    {(displayedProfile?.avatar || currentUser.photoURL) && (
+                      <img src={displayedProfile?.avatar || currentUser.photoURL} alt="" />
+                    )}
+                    <span>Logged in as <strong>{displayedProfile?.username || displayedProfile?.displayName || currentUser.displayName || currentUser.email}</strong></span>
+                  </span>
+                  <button onClick={handleSignOut} className="nav-login logout-btn">
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <Link to="/login" className="nav-login">Login</Link>
+              )}
+            </div>
 
           </nav>
         )}
@@ -59,7 +93,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/calendartest" element={<CalendarTest />} />
+          <Route path="/calendartest" element={<CalendarTest onProfileSaved={setUserProfile} />} />
           <Route path="/join-team" element={<JoinTeam />} />
           <Route path="/create-team" element={<CreateTeam />} />
           <Route path="/login" element={<Login />} />

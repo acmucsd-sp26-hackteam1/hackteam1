@@ -15,6 +15,7 @@ function CreateGroupFAB() {
   const [joinCode, setJoinCode] = useState('')
   const [nameError, setNameError] = useState('')
   const [joinError, setJoinError] = useState('')
+  const [createError, setCreateError] = useState('')
   const [createdCode, setCreatedCode] = useState('')
   const { currentUser } = useAuth()
   const { setCurrentGroupCode } = useCurrentGroup()
@@ -25,6 +26,7 @@ function CreateGroupFAB() {
     setJoinCode('')
     setNameError('')
     setJoinError('')
+    setCreateError('')
     setCreatedCode('')
   }
 
@@ -37,6 +39,7 @@ function CreateGroupFAB() {
     setActiveTab(tab)
     setNameError('')
     setJoinError('')
+    setCreateError('')
   }
 
   const handleCreateGroup = async (e) => {
@@ -51,19 +54,29 @@ function CreateGroupFAB() {
       return
     }
     setNameError('')
+    setCreateError('')
+    const invitedUserIds = [...new Set(
+      friendIds.split(/[\s,]+/).map((id) => id.trim()).filter(Boolean)
+    )].filter((id) => id !== currentUser.uid)
 
     try {
       const res = await fetch('http://localhost:3000/api/groups', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: trimmedName, userId: currentUser?.uid }),
+        body: JSON.stringify({
+          name: trimmedName,
+          userId: currentUser.uid,
+          friendIds: invitedUserIds,
+        }),
       })
       const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Could not create group.')
       console.log('Group created:', data)
       setCreatedCode(data.code)
       setCurrentGroupCode(data.code)
     } catch (err) {
       console.error('Create group failed:', err)
+      setCreateError(err.message || 'Could not create group. Try again.')
     }
     // don't closeModal() yet — want to show the code first
   }
@@ -179,17 +192,22 @@ function CreateGroupFAB() {
                 </label>
 
                 <label className="create-group-field">
-                  <span>Friend IDs to invite</span>
+                  <span>User IDs to add</span>
                   <textarea
                     value={friendIds}
                     onChange={(e) => setFriendIds(e.target.value)}
-                    placeholder="e.g. 12345, 67890, 11111"
+                    placeholder="Paste User IDs from profile popups"
                     rows={3}
                   />
                   <span className="create-group-hint">
-                    Enter one or more numeric IDs, separated by commas or spaces
+                    Enter full User IDs, separated by commas or spaces. They will be added immediately.
                   </span>
                 </label>
+                {createError && (
+                  <p className="create-group-error" role="alert">
+                    {createError}
+                  </p>
+                )}
                 <div className="create-group-actions">
                   <button type="button" className="create-group-cancel" onClick={closeModal}>
                     Cancel
