@@ -85,3 +85,23 @@ exports.deleteEvent = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+exports.getEventsForUsers = async (req, res) => {
+  try {
+    const { uids } = req.body;
+
+    if (!Array.isArray(uids)) {
+      return res.status(400).json({
+        error: "uids must be an array",
+      });
+    }
+
+    const events = await Event.find({
+      ownerUid: { $in: uids },
+    });
+
+    res.json(events);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

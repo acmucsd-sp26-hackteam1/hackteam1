@@ -4,6 +4,7 @@ const groupController = require("../controllers/groupController");
 
 router.post("/", groupController.createGroup);
 router.post("/:code/join", groupController.joinGroup);
+router.get("/user/:uid", groupController.getUserGroups);
 router.get("/:code", groupController.getGroup);
 
 module.exports = router;

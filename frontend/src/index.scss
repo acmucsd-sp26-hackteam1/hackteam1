@@ -854,3 +854,29 @@ $ucsd-blue-bright: #5eb3f0;
   background: #222;
   color: white;
 }
+
+.calendar-top-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.group-selector select {
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 28px 6px 8px;
+}
+
+.group-selector select:focus {
+  outline: none;
+}
+
+.no-group-label {
+  font-size: 18px;
+  font-weight: 600;
+}

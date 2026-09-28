@@ -1,7 +1,7 @@
 const crypto = require("crypto");
 const mongoose = require("mongoose");
-const User = require("./models/User");
-const Group = require("./models/Group");
+const User = require("./models/user");
+const Group = require("./models/group");
 
 const USERNAME_PATTERN = /^[a-zA-Z0-9_]{3,20}$/;
 const JOIN_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";

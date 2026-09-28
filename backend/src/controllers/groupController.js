@@ -44,3 +44,17 @@ exports.getGroup = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+exports.getUserGroups = async (req, res) => {
+  try {
+    const { uid } = req.params;
+
+    const groups = await Group.find({
+      members: uid,
+    });
+
+    res.json(groups);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

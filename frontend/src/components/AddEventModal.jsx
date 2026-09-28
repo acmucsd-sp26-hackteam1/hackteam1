@@ -1,15 +1,19 @@
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 export default function AddEventModal({
   isOpen,
   onClose,
   onAddEvent,
 }) {
+  const { currentUser } = useAuth();
+
   const [name, setName] = useState("");
   const [days, setDays] = useState([]);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [location, setLocation] = useState("");
+  const [startDate, setStartDate] = useState("");
 
   const weekdays = [
     "Sunday",
@@ -35,27 +39,52 @@ export default function AddEventModal({
     }
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
-    const newEvent = {
-      id: crypto.randomUUID(),
-      name,
-      days,
-      startTime,
-      endTime,
-      location,
-    };
+    if(!currentUser) {
+      console.error("User not logged in");
+      return;
+    }
 
-    onAddEvent(newEvent);
+    try {
+      const response = await fetch("http://localhost:3000/api/events", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
 
-    setName("");
-    setDays([]);
-    setStartTime("");
-    setEndTime("");
-    setLocation("");
+        body: JSON.stringify({
+          name,
+          ownerUid: currentUser.uid,
+          startDate,
+          startTime,
+          endTime,
+          isRecurring: days.length > 0,
+          recurringDays: days,
+          location,
+        }),
+      });
 
-    onClose();
+      if (!response.ok) {
+        throw new Error("Failed to create event");
+      }
+
+      const savedEvent = await response.json();
+      console.log("Saved event:", savedEvent);
+      onAddEvent(savedEvent);
+
+      setName("");
+      setDays([]);
+      setStartDate("");
+      setStartTime("");
+      setEndTime("");
+      setLocation("");
+
+      onClose();
+    } catch (err) {
+      console.error("Error creating event:", err);
+    }
   }
 
   return (
@@ -71,6 +100,17 @@ export default function AddEventModal({
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label>Start Date</label>
+
+            <input
+              type = "date"
+              value = {startDate}
+              onChange = {(e) => setStartDate(e.target.value)}
               required
             />
           </div>
