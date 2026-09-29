@@ -11,6 +11,7 @@ const TABS = {
 function CreateGroupFAB({ onGroupChanged }) {
   const { isOpen, activeTab, setActiveTab, openGroupModal, closeGroupModal } = useGroupModal()
   const [groupName, setGroupName] = useState('')
+  const [friendIds, setFriendIds] = useState('')
   const [joinCode, setJoinCode] = useState('')
   const [nameError, setNameError] = useState('')
   const [joinError, setJoinError] = useState('')
@@ -21,6 +22,7 @@ function CreateGroupFAB({ onGroupChanged }) {
 
   const resetForm = () => {
     setGroupName('')
+    setFriendIds('')
     setJoinCode('')
     setNameError('')
     setJoinError('')
