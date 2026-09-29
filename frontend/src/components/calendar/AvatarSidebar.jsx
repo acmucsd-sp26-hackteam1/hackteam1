@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useCurrentGroup } from "../../context/CurrentGroupContext.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 export function AvatarSidebar({ visibleCalendarIds, onToggleCalendar }) {
-    const { currentGroupCode, profileVersion } = useCurrentGroup();
+    const { currentGroupCode, setCurrentGroupCode, profileVersion } = useCurrentGroup();
+    const { currentUser } = useAuth();
     const [memberProfiles, setMemberProfiles] = useState([]);
 
     useEffect(() => {
@@ -33,6 +35,23 @@ export function AvatarSidebar({ visibleCalendarIds, onToggleCalendar }) {
         fetchGroupAndMembers();
     }, [currentGroupCode, profileVersion]);
 
+    async function handleLeaveGroup() {
+        if (!window.confirm("Leave this group?")) return;
+
+        try {
+            const res = await fetch(`http://localhost:3000/api/groups/${currentGroupCode}/leave`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId: currentUser?.uid }),
+            });
+            if (!res.ok) throw new Error("Could not leave group.");
+            setMemberProfiles([]);
+            setCurrentGroupCode(null);
+        } catch (err) {
+            console.error("Leave group failed:", err);
+        }
+    }
+
     if (!currentGroupCode) {
         return <div className="avatar-sidebar"><p>No group yet</p></div>;
     }
@@ -56,6 +75,7 @@ export function AvatarSidebar({ visibleCalendarIds, onToggleCalendar }) {
                     </div>
                 );
             })}
+            <button type="button" onClick={handleLeaveGroup}>Leave group</button>
         </div>
     );
 }

@@ -41,6 +41,23 @@ exports.joinGroup = async (req, res) => {
     }
 };
 
+exports.leaveGroup = async (req, res) => {
+    try {
+        const { code } = req.params;
+        const { userId } = req.body;
+
+        const group = await Group.findOne({ code });
+        if (!group) return res.status(404).json({ error: "Group not found" });
+
+        group.members = group.members.filter((member) => member !== userId);
+        await group.save();
+
+        res.json(group);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
 exports.getGroup = async (req, res) => {
     try {
         const { code } = req.params;
