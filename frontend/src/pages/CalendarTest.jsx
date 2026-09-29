@@ -8,12 +8,11 @@ import ProfileModal from '../components/ProfileModal.jsx';
 import AddEventModal from '../components/AddEventModal.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 
-function CalendarTest() {
+function CalendarTest({ onProfileSaved }) {
   const { currentUser } = useAuth();
   const [viewMode, setViewMode] = useState(TimeFrames.MONTH);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isAddEventOpen, setIsAddEventOpen] = useState(false);
-
   const [calendars, setCalendars] = useState([
     {
       id: "me",
@@ -154,7 +153,11 @@ function CalendarTest() {
         onAddEvent={addEvent}
       />
 
-      <ProfileModal isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+      <ProfileModal
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+        onProfileSaved={onProfileSaved}
+      />
     </section>
   );
 }
