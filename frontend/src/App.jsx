@@ -9,17 +9,21 @@ import CreateTeam from './pages/CreateTeam.jsx'
 import NotFound from './pages/NotFound.jsx'
 import Register from './pages/Register.jsx'
 import CreateGroupFAB from './components/CreateGroupFAB.jsx'
+import LargeFooter from './components/layout/LargeFooter.jsx'
+import SmallFooter from './components/layout/SmallFooter.jsx'
 import { GroupModalProvider } from './context/GroupModalContext.jsx'
 import { useAuth } from './context/AuthContext.jsx'
 import { doSignOut } from './auth/auth.js'
 
 const CREATE_GROUP_ROUTES = ['/calendartest']
+const LARGE_FOOTER_ROUTES = ['/', '/about']
 
 function App() {
   const { pathname } = useLocation()
   const showCreateGroup = CREATE_GROUP_ROUTES.includes(pathname)
 
   const hideNav = pathname === "/login" || pathname === "/register"
+  const showLargeFooter = LARGE_FOOTER_ROUTES.includes(pathname)
 
   const { currentUser, authLoading } = useAuth()
   const [userProfile, setUserProfile] = useState(null)
@@ -103,7 +107,7 @@ function App() {
       </div>
       {!hideNav && (
         <div className="footer">
-          Made with ❤️ by ACM Hack Project Team 1
+          {showLargeFooter ? <LargeFooter /> : <SmallFooter />}
         </div>
       )}
       
