@@ -9,6 +9,7 @@ import AddEventModal from "../components/AddEventModal.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useCurrentGroup } from "../context/CurrentGroupContext.jsx";
 import { CourseSearch } from '../components/CourseSearch.jsx'
+import { UpcomingEvents } from '../components/calendar/UpcomingEvents.jsx';
 
 const CALENDAR_COLORS = [
   "#4285f4",
@@ -373,7 +374,62 @@ function Calendar({ onProfileSaved, currentUserAvatar }) {
       </p>
     </section>
     <section className="content-container calendar-page">
+      <aside className="calendar-sidebar">
+        <h2>Your Calendar</h2>
+        <UpcomingEvents
+          entries={calendars.find((calendar) => calendar.id === currentUser?.uid)?.entries ?? []}
+        />
+      </aside>
+
+      <div className="calendar-main">
       <div className="calendar-top-controls">
+        <div className="view-buttons">
+          <button
+            type="button"
+            className={viewMode === TimeFrames.DAY ? "active" : ""}
+            onClick={() =>
+              setViewMode(
+                TimeFrames.DAY
+              )
+            }
+          >
+            Day
+          </button>
+          <button
+            type="button"
+            className={viewMode === TimeFrames.WEEK ? "active" : ""}
+            onClick={() =>
+              setViewMode(
+                TimeFrames.WEEK
+              )
+            }
+          >
+            Week
+          </button>
+          <button
+            type="button"
+            className={viewMode === TimeFrames.MONTH ? "active" : ""}
+            onClick={() =>
+              setViewMode(
+                TimeFrames.MONTH
+              )
+            }
+          >
+            Month
+          </button>
+        </div>
+
+        <CourseSearch onAddCourse={handleAddCourse} />
+
+        <div className="calendar-actions">
+          <button
+            type="button"
+            onClick={() =>
+              setIsProfileOpen(true)
+            }
+          >
+            Profile
+          </button>
         <div className="group-selector">
           {groups.length > 0 ? (
             <select
@@ -413,60 +469,6 @@ function Calendar({ onProfileSaved, currentUserAvatar }) {
           )}
 
         </div>
-
-        <CourseSearch onAddCourse={handleAddCourse} />
-
-        <div className="view-buttons">
-
-          <button
-            type="button"
-            onClick={() =>
-              setIsProfileOpen(true)
-            }
-          >
-            Profile
-          </button>
-
-
-          <button
-            type="button"
-            className={viewMode === TimeFrames.MONTH ? "active" : ""}
-            onClick={() =>
-              setViewMode(
-                TimeFrames.MONTH
-              )
-            }
-          >
-            Month View
-          </button>
-
-
-          <button
-            type="button"
-            className={viewMode === TimeFrames.WEEK ? "active" : ""}
-            onClick={() =>
-              setViewMode(
-                TimeFrames.WEEK
-              )
-            }
-          >
-            Week View
-          </button>
-
-
-          <button
-            type="button"
-            className={viewMode === TimeFrames.DAY ? "active" : ""}
-            onClick={() =>
-              setViewMode(
-                TimeFrames.DAY
-              )
-            }
-          >
-            Day View
-          </button>
-
-
           <button
             type="button"
             onClick={() =>
@@ -477,9 +479,7 @@ function Calendar({ onProfileSaved, currentUserAvatar }) {
           >
             + Add Event
           </button>
-
         </div>
-
       </div>
 
       {groupsLoaded && groups.length === 0 && (
@@ -543,6 +543,7 @@ function Calendar({ onProfileSaved, currentUserAvatar }) {
 
 
       </CalendarLayout>
+      </div>
 
       <AddEventModal
 

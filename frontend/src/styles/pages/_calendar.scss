@@ -31,7 +31,80 @@
 }
 
 .content-container.calendar-page {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  align-items: start;
+  gap: $space;
   padding: $space;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.calendar-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: $space;
+
+  h2 {
+    margin: 0;
+    font-family: $font-hand;
+    font-weight: 400;
+    font-size: 60px;
+    line-height: 1;
+    text-align: center;
+  }
+}
+
+.upcoming-panel {
+  @include panel;
+  padding: $space;
+
+  h3 {
+    margin: 0;
+    font-size: 24px;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.upcoming-subtitle {
+  margin-top: 4px;
+  font-size: 15px;
+}
+
+.upcoming-empty {
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.upcoming-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.upcoming-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.upcoming-item-title {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.upcoming-item-detail {
+  font-size: 13px;
+}
+
+.calendar-main {
+  min-width: 0;
 
   > p {
     margin: 0;
@@ -59,18 +132,23 @@
   border-radius: 0 0 $radius-large $radius-large;
 }
 
-.view-buttons {
+.view-buttons,
+.calendar-actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 6px;
 
   button {
     @include pill-button;
   }
+}
 
-  button.active {
-    background-color: #fff;
-    box-shadow: inset 0 0 0 2px $color-border;
+.view-buttons button {
+  background-color: #fff;
+
+  &.active {
+    background-color: $color-olive;
   }
 }
 
@@ -94,14 +172,28 @@
 .day-navigation {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 12px;
   padding: 10px $space;
   background-color: $color-lemon;
   border-bottom: $border-thick;
 
   button {
-    @include pill-button;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background-color: $color-olive;
+    color: $color-text;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  button:last-child {
+    margin-left: auto;
   }
 
   h2 {
@@ -116,7 +208,7 @@
 }
 
 .day-navigation > div {
-  text-align: center;
+  text-align: left;
 }
 
 .month-container .month-name {
@@ -211,9 +303,20 @@
   text-align: center;
 }
 
+.group-code {
+  max-width: 100px;
+  margin: auto 0 0;
+  padding: 4px 10px;
+  background-color: #fff;
+  border: 2px solid $color-avatar-outline;
+  border-radius: $radius-pill;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .leave-group-button {
   @include pill-button(#fff);
-  margin-top: auto;
   padding: 4px 12px;
   font-size: 12px;
 }

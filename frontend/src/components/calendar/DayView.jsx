@@ -57,8 +57,9 @@ export function DayView({
         <button
           type="button"
           onClick={() => changeDay(-1)}
+          aria-label="Previous day"
         >
-          Previous Day
+          ‹
         </button>
 
         <div>
@@ -69,8 +70,9 @@ export function DayView({
         <button
           type="button"
           onClick={() => changeDay(1)}
+          aria-label="Next day"
         >
-          Next Day
+          ›
         </button>
       </div>
 

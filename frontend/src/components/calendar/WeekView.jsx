@@ -64,8 +64,9 @@ export function WeekView({
         <button
           type="button"
           onClick={() => changeWeek(-1)}
+          aria-label="Previous week"
         >
-          Previous Week
+          ‹
         </button>
 
         <h2>
@@ -76,8 +77,9 @@ export function WeekView({
         <button
           type="button"
           onClick={() => changeWeek(1)}
+          aria-label="Next week"
         >
-          Next Week
+          ›
         </button>
       </div>
 

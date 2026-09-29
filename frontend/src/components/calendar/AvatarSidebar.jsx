@@ -116,6 +116,7 @@ export function AvatarSidebar({ visibleCalendarIds, onToggleCalendar, currentUse
                     </div>
                 );
             })}
+            <p className="group-code">Group ID: {currentGroupCode}</p>
             <button type="button" className="leave-group-button" onClick={handleLeaveGroup}>Leave group</button>
         </div>
     );

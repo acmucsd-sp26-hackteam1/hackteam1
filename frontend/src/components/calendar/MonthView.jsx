@@ -49,16 +49,16 @@ export function MonthView({ calendars, currentUserUid, onDeleteEvent }) {
   return (
     <>
       <div className="month-container">
-        <button type="button" onClick={() => addMonth(-1)}>
-          Previous Month
+        <button type="button" onClick={() => addMonth(-1)} aria-label="Previous month">
+          ‹
         </button>
 
         <div className="month-name">
           {getMonthName(month) + " " + year}
         </div>
 
-        <button type="button" onClick={() => addMonth(1)}>
-          Next Month
+        <button type="button" onClick={() => addMonth(1)} aria-label="Next month">
+          ›
         </button>
       </div>
 
