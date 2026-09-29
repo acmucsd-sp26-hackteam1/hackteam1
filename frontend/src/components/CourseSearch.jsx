@@ -25,10 +25,10 @@ export function CourseSearch({ onAddCourse }) {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const fuse = useMemo(
-    () => new Fuse(courses, { keys: ['subject', 'number', 'title'], threshold: 0.3 }),
-    [courses]
-  )
+  const fuse = useMemo(() => {
+    const coursesWithCode = courses.map((course) => ({ ...course, code: `${course.subject} ${course.number}` }))
+    return new Fuse(coursesWithCode, { keys: ['code', 'subject', 'number', 'title'], threshold: 0.3 })
+  }, [courses])
 
   const results = query.trim() ? fuse.search(query).slice(0, 8).map((r) => r.item) : []
 
