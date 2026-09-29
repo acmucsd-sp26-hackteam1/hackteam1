@@ -270,44 +270,42 @@ function CalendarTest({ onProfileSaved }) {
     );
   }
 
-    async function handleAddCourse(course) {
+    async function handleAddCourse(course, section) {
     if (!currentUser) return
-
-    const lecture = course.sections?.find((s) => s.type === 'LE')
-    if (!lecture) {
-      console.warn('No LE section found for', course)
+    const meeting = section ?? course.sections?.find((s) => s.type === 'LE')
+    if (!meeting) {
+      console.warn('No section found for', course)
       return
     }
-
-    const recurringDays = parseDays(lecture.days)
+    const recurringDays = parseDays(meeting.days)
     if (recurringDays.length === 0) {
-      console.warn('Lecture has no meeting days', lecture)
+      console.warn('Section has no meeting days', meeting)
       return
     }
-
+    const isLecture = meeting.type === 'LE'
     const payload = {
-      name: `${course.subject} ${course.number}`,
+      name: isLecture
+        ? `${course.subject} ${course.number}`
+        : `${course.subject} ${course.number} ${meeting.type} ${meeting.code}`,
       ownerUid: currentUser.uid,
       startDate: QUARTER_START,
-      startTime: to24Hour(lecture.time_start),
-      endTime: to24Hour(lecture.time_end),
+      startTime: to24Hour(meeting.time_start),
+      endTime: to24Hour(meeting.time_end),
       isRecurring: true,
       recurringDays,
-      location: `${lecture.building} ${lecture.room}`.trim(),
+      location: `${meeting.building} ${meeting.room}`.trim(),
     }
-
     try {
       const response = await fetch('http://localhost:3000/api/events', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       })
-      if (!response.ok) throw new Error('Failed to save course')
+      if (!response.ok) throw new Error('Failed to save section')
       const saved = await response.json()
-      console.log('Saved course event:', saved)
       addEvent(saved)
     } catch (err) {
-      console.error('Error adding course:', err)
+      console.error('Error adding section:', err)
     }
   }
 
