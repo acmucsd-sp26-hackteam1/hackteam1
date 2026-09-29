@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext.jsx'
 
 const USERNAME_PATTERN = /^[a-zA-Z0-9_]{3,20}$/
 
-function ProfileModal({ isOpen, onClose }) {
+function ProfileModal({ isOpen, onClose, onProfileSaved }) {
   const { currentUser } = useAuth()
   const [displayName, setDisplayName] = useState('')
   const [username, setUsername] = useState('')
@@ -16,13 +16,40 @@ function ProfileModal({ isOpen, onClose }) {
 
   useEffect(() => {
     if (!isOpen || !currentUser) return
-    setDisplayName(currentUser.displayName || '')
-    setUsername('')
-    setAboutMe('')
-    setAvatarDataUrl(currentUser.photoURL || '')
-    setNameError('')
-    setUsernameError('')
-    setSaveError('')
+
+    let active = true
+    async function loadProfile() {
+      let profile = null
+      try {
+        const res = await fetch(`http://localhost:3000/api/users/${encodeURIComponent(currentUser.uid)}`)
+        if (res.status !== 404) {
+          const data = await res.json().catch(() => ({}))
+          if (!res.ok) throw new Error(data.error || 'Could not load profile.')
+          profile = data
+        }
+      } catch (err) {
+        if (active) {
+          setSaveError(err instanceof TypeError
+            ? 'Could not reach the backend. Start the backend server and try again.'
+            : err.message || 'Could not load profile.')
+        }
+      }
+
+      if (!active) return
+      setDisplayName(profile?.displayName || currentUser.displayName || '')
+      setUsername(profile?.username || '')
+      setAboutMe(profile?.aboutMe || '')
+      setAvatarDataUrl(profile?.avatar || currentUser.photoURL || '')
+      setNameError('')
+      setUsernameError('')
+      if (!profile) return
+      setSaveError('')
+    }
+
+    loadProfile()
+    return () => {
+      active = false
+    }
   }, [isOpen, currentUser])
 
   if (!isOpen) return null
@@ -73,15 +100,23 @@ function ProfileModal({ isOpen, onClose }) {
           displayName: trimmedName,
           email: currentUser.email,
           avatar: avatarDataUrl,
+          username: trimmedUsername,
+          aboutMe: aboutMe.trim(),
         }),
       })
-      const data = await res.json()
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        throw new Error(data.error || 'Could not save profile. Try again.')
+      }
       console.log('Profile saved:', data)
+      onProfileSaved?.(data)
       setSaveError('')
       onClose()
     } catch (err) {
       console.error('Save profile failed:', err)
-      setSaveError('Failed to save profile. Try again.')
+      setSaveError(err instanceof TypeError
+        ? 'Could not reach the backend. Start the backend server and try again.'
+        : err.message || 'Failed to save profile. Try again.')
     }
   }
 

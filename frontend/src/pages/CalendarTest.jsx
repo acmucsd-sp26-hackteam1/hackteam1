@@ -18,7 +18,7 @@ const CALENDAR_COLORS = [
   "#00acc1",
 ];
 
-function CalendarTest() {
+function CalendarTest({ onProfileSaved }) {
   const { currentUser } = useAuth();
   const { currentGroupCode, setCurrentGroupCode } = useCurrentGroup();
   const [viewMode, setViewMode] = useState(TimeFrames.MONTH);
@@ -472,20 +472,10 @@ function CalendarTest() {
       />
 
       <ProfileModal
-
-        isOpen={
-          isProfileOpen
-        }
-
-        onClose={() =>
-          setIsProfileOpen(
-            false
-          )
-        }
-
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+        onProfileSaved={onProfileSaved}
       />
-
-
     </section>
   );
 }

@@ -26,4 +26,7 @@ app.use("/api/events", eventRoutes);
 
 app.use("/api/profiles", profilesRouter);
 
+const courseRoutes = require("./routes/courseRoutes");
+app.use("/api/courses", courseRoutes);
+
 module.exports = app;
