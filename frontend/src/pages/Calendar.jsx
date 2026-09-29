@@ -46,6 +46,7 @@ function Calendar({ onProfileSaved, currentUserAvatar }) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isAddEventOpen, setIsAddEventOpen] = useState(false);
   const [groups, setGroups] = useState([]);
+  const [groupsLoaded, setGroupsLoaded] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [calendars, setCalendars] = useState([]);
   const [visibleCalendarIds, setVisibleCalendarIds] = useState([]);
@@ -69,6 +70,7 @@ function Calendar({ onProfileSaved, currentUserAvatar }) {
         const data = await response.json();
         console.log("User groups:", data);
         setGroups(data);
+        setGroupsLoaded(true);
         if (data.length === 0) {
           setSelectedGroup(null);
           setCurrentGroupCode(null);
@@ -144,6 +146,19 @@ function Calendar({ onProfileSaved, currentUserAvatar }) {
         const events =
           await response.json();
 
+        const memberNames = await Promise.all(
+          memberUids.map(async (uid) => {
+            try {
+              const userResponse = await fetch(`http://localhost:3000/api/users/${uid}`);
+              if (!userResponse.ok) return null;
+              const user = await userResponse.json();
+              return user.displayName || user.username || null;
+            } catch {
+              return null;
+            }
+          })
+        );
+
         console.log(
           "Group events:",
           events
@@ -159,12 +174,12 @@ function Calendar({ onProfileSaved, currentUserAvatar }) {
               name:
                 uid === currentUser.uid
                   ? "My Calendar"
-                  : `Member ${index + 1}`,
+                  : memberNames[index] || `Member ${index + 1}`,
 
               owner:
                 uid === currentUser.uid
                   ? "Me"
-                  : `Member ${index + 1}`,
+                  : memberNames[index] || `Member ${index + 1}`,
 
               color:
                 CALENDAR_COLORS[
@@ -467,7 +482,7 @@ function Calendar({ onProfileSaved, currentUserAvatar }) {
 
       </div>
 
-      {groups.length === 0 && (
+      {groupsLoaded && groups.length === 0 && (
 
         <p>
           You are not currently
