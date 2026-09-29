@@ -44,20 +44,22 @@ export function MonthView({ calendars, currentUserUid, onDeleteEvent }) {
     0
   ).getDate();
 
+  const trailingEmptyCells = (7 - ((firstDayOfMonth + daysInMonth) % 7)) % 7;
+
   return (
     <>
       <div className="month-container">
-        <div onClick={() => addMonth(-1)}>
-          go back a month
-        </div>
+        <button type="button" onClick={() => addMonth(-1)}>
+          Previous Month
+        </button>
 
         <div className="month-name">
           {getMonthName(month) + " " + year}
         </div>
 
-        <div onClick={() => addMonth(1)}>
-          go forward a month
-        </div>
+        <button type="button" onClick={() => addMonth(1)}>
+          Next Month
+        </button>
       </div>
 
       <div className="month-grid">
@@ -90,6 +92,13 @@ export function MonthView({ calendars, currentUserUid, onDeleteEvent }) {
             </div>
           );
         })}
+
+        {Array(trailingEmptyCells).fill(null).map((_, i) => (
+          <div
+            key={`trailing-${i}`}
+            className="month-cell"
+          />
+        ))}
       </div>
     </>
   );

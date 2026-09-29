@@ -349,7 +349,15 @@ function Calendar({ onProfileSaved, currentUserAvatar }) {
   }
 
   return (
-    <section className="content-container">
+    <>
+    <section className="calendar-header">
+      <h1 className="calendar-header-title">UCSDTime</h1>
+      <p className="calendar-header-subtitle">Calendar</p>
+      <p className="calendar-header-blurb">
+        Plan your week, share with friends, and stay on top of campus events.
+      </p>
+    </section>
+    <section className="content-container calendar-page">
       <div className="calendar-top-controls">
         <div className="group-selector">
           {groups.length > 0 ? (
@@ -407,6 +415,7 @@ function Calendar({ onProfileSaved, currentUserAvatar }) {
 
           <button
             type="button"
+            className={viewMode === TimeFrames.MONTH ? "active" : ""}
             onClick={() =>
               setViewMode(
                 TimeFrames.MONTH
@@ -419,6 +428,7 @@ function Calendar({ onProfileSaved, currentUserAvatar }) {
 
           <button
             type="button"
+            className={viewMode === TimeFrames.WEEK ? "active" : ""}
             onClick={() =>
               setViewMode(
                 TimeFrames.WEEK
@@ -431,6 +441,7 @@ function Calendar({ onProfileSaved, currentUserAvatar }) {
 
           <button
             type="button"
+            className={viewMode === TimeFrames.DAY ? "active" : ""}
             onClick={() =>
               setViewMode(
                 TimeFrames.DAY
@@ -542,6 +553,7 @@ function Calendar({ onProfileSaved, currentUserAvatar }) {
         onProfileSaved={onProfileSaved}
       />
     </section>
+    </>
   );
 }
 
