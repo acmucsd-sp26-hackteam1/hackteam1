@@ -3,7 +3,7 @@ import { useCurrentGroup } from "../../context/CurrentGroupContext.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import defaultPic from "../../assets/d2984ec4b65a8568eab3dc2b640fc58e.jpg";
 
-export function AvatarSidebar({ visibleCalendarIds, onToggleCalendar }) {
+export function AvatarSidebar({ visibleCalendarIds, onToggleCalendar, currentUserAvatar }) {
     const { currentGroupCode, setCurrentGroupCode } = useCurrentGroup();
     const { currentUser } = useAuth();
     const [memberProfiles, setMemberProfiles] = useState([]);
@@ -74,7 +74,7 @@ export function AvatarSidebar({ visibleCalendarIds, onToggleCalendar }) {
     }
 
     if (!currentGroupCode) {
-        const avatar = currentUser?.photoURL || DEFAULT_AVATAR;
+        const avatar = currentUserAvatar || DEFAULT_AVATAR;
         const displayName = currentUser?.displayName || currentUser?.email || "You";
 
         return (
@@ -108,7 +108,7 @@ export function AvatarSidebar({ visibleCalendarIds, onToggleCalendar }) {
                             type="button"
                         >
                             <img
-                                src={avatar || DEFAULT_AVATAR}
+                                src={(uid === currentUser?.uid ? currentUserAvatar : avatar) || DEFAULT_AVATAR}
                                 alt={displayName}
                             />
                         </button>

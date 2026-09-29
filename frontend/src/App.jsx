@@ -73,6 +73,7 @@ function App() {
   }
 
   const displayedProfile = userProfile?.uid === currentUser?.uid ? userProfile : null
+  const currentUserAvatar = displayedProfile?.avatar || currentUser?.photoURL
 
   return (
     <GroupModalProvider>
@@ -110,7 +111,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/calendartest" element={<CalendarTest onProfileSaved={setUserProfile} />} />
+          <Route path="/calendartest" element={<CalendarTest onProfileSaved={setUserProfile} currentUserAvatar={currentUserAvatar} />} />
           <Route path="/join-team" element={<JoinTeam />} />
           <Route path="/create-team" element={<CreateTeam />} />
           <Route path="/login" element={<Login />} />

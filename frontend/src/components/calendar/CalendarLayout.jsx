@@ -6,6 +6,7 @@ export function CalendarLayout({
   calendars,
   visibleCalendarIds,
   onToggleCalendar,
+  currentUserAvatar,
 }) {
   return (
     <div className="calendar-layout">
@@ -18,6 +19,7 @@ export function CalendarLayout({
           calendars={calendars}
           visibleCalendarIds={visibleCalendarIds}
           onToggleCalendar={onToggleCalendar}
+          currentUserAvatar={currentUserAvatar}
         />
       )}
     </div>
