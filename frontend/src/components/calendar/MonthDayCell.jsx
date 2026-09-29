@@ -10,7 +10,8 @@ export function MonthDayCell({ date, calendars, currentUserUid, onDeleteEvent })
       return false;
     }
 
-    const eventDate = new Date(entry.startDate);
+    const storedDate = new Date(entry.startDate);
+    const eventDate = new Date(storedDate.getUTCFullYear(), storedDate.getUTCMonth(), storedDate.getUTCDate());
 
     // Recurring event
     if (entry.isRecurring) {

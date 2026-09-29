@@ -20,7 +20,8 @@ export function DayView({
       return false;
     }
 
-    const eventDate = new Date(entry.startDate);
+    const storedDate = new Date(entry.startDate);
+    const eventDate = new Date(storedDate.getUTCFullYear(), storedDate.getUTCMonth(), storedDate.getUTCDate());
 
     if (entry.isRecurring) {
       const dayName = selectedDate.toLocaleDateString("en-US", {
