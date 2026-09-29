@@ -1,39 +1,78 @@
-import { Weekday, getMonthName, getDayName, getMonthGridDays, getEventsOnDay } from '../../helpers.js';
-import { useState } from 'react';
-import { MonthDayCell } from './MonthDayCell.jsx';
+import {
+  Months,
+  Weekday,
+  getMonthName,
+  getDayName
+} from "../../helpers.js";
 
-export function MonthView({ events }) {
-    const [year, setYear] = useState((new Date()).getFullYear());
-    const [month, setMonth] = useState((new Date()).getMonth());
+import { useState } from "react";
+import { MonthDayCell } from "./MonthDayCell.jsx";
 
-    function addMonth(toAdd) {
-        let years = Math.floor((toAdd + month)/12);
-        setYear(y => y + years);
-        setMonth(m => {
-            m += toAdd;
-            if (m < 0) {
-                m %= 12;
-                m += 12;
-            } else {
-                m %= 12;
-            }
-            return m;
-        });
-    }
+export function MonthView({ calendars }) {
+  const [year, setYear] = useState(
+    new Date().getFullYear()
+  );
 
-    const mondayFirstWeekdays = [...Object.values(Weekday).slice(1), Weekday.SUNDAY];
+  const [month, setMonth] = useState(
+    Months.JANUARY
+  );
 
-    return (
-        <>
-            <div className="month-container">
-                <button type="button" className="round-arrow" onClick={() => addMonth(-1)} aria-label="Go back a month">‹</button>
-                <div className="month-name">{getMonthName(month) + ' ' + year}</div>
-                <button type="button" className="round-arrow" onClick={() => addMonth(1)} aria-label="Go forward a month">›</button>
+  function addMonth(toAdd) {
+    let years = Math.floor((toAdd + month) / 12);
+
+    setYear((y) => y + years);
+
+    setMonth((m) => {
+      m += toAdd;
+
+      if (m < 0) {
+        m %= 12;
+        m += 12;
+      } else {
+        m %= 12;
+      }
+
+      return m;
+    });
+  }
+
+  return (
+    <>
+      <div className="month-container">
+        <div onClick={() => addMonth(-1)}>
+          go back a month
+        </div>
+
+        <div className="month-name">
+          {getMonthName(month) + " " + year}
+        </div>
+
+        <div onClick={() => addMonth(1)}>
+          go forward a month
+        </div>
+      </div>
+
+      <div className="month-grid">
+        {Object.values(Weekday).map((d) => (
+          <div key={d} className="month-header">
+            {getDayName(d).slice(0, 3)}
+          </div>
+        ))}
+
+        {Array(35).fill(null).map((_, i) => {
+          const weekday = i % 7;
+          const dayName = getDayName(weekday);
+
+          return (
+            <div key={i} className="month-cell">
+              <MonthDayCell
+                dayName={dayName}
+                calendars={calendars}
+              />
             </div>
-            <div className="month-grid">
-                {mondayFirstWeekdays.map(d => <div key={d} className="month-header">{getDayName(d).slice(0, 3)}</div>)}
-                {getMonthGridDays(year, month).map(day => <MonthDayCell key={day.toISOString()} day={day} events={getEventsOnDay(events, day)} />)}
-            </div>
-        </>
-    );
+          );
+        })}
+      </div>
+    </>
+  );
 }

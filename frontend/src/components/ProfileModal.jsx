@@ -1,81 +1,56 @@
 import { useEffect, useRef, useState } from 'react'
-import { auth } from '../firebase.js'
-import { apiErrorMessage, fetchProfile, fetchProfileByFirebaseUid, getStoredUserId, saveProfile, setStoredUserId } from '../api.js'
+import { useAuth } from '../context/AuthContext.jsx'
 
 const USERNAME_PATTERN = /^[a-zA-Z0-9_]{3,20}$/
 
-const emptyProfile = {
-  displayName: '',
-  username: '',
-  aboutMe: '',
-  avatarDataUrl: '',
-}
-
-function ProfileModal({ isOpen, onClose }) {
+function ProfileModal({ isOpen, onClose, onProfileSaved }) {
+  const { currentUser } = useAuth()
   const [displayName, setDisplayName] = useState('')
   const [username, setUsername] = useState('')
   const [aboutMe, setAboutMe] = useState('')
   const [avatarDataUrl, setAvatarDataUrl] = useState('')
-  const [friendId, setFriendId] = useState('')
   const [nameError, setNameError] = useState('')
   const [usernameError, setUsernameError] = useState('')
-  const [formError, setFormError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [isSaving, setIsSaving] = useState(false)
+  const [saveError, setSaveError] = useState('')
   const fileInputRef = useRef(null)
 
   useEffect(() => {
-    if (!isOpen) return
+    if (!isOpen || !currentUser) return
 
-    const profile = { ...emptyProfile }
-    setDisplayName(profile.displayName)
-    setUsername(profile.username)
-    setAboutMe(profile.aboutMe)
-    setAvatarDataUrl(profile.avatarDataUrl)
-    setFriendId('')
-    setNameError('')
-    setUsernameError('')
-    setFormError('')
-
-    const userId = getStoredUserId()
-    const firebaseUser = auth.currentUser
-    if (!userId && !firebaseUser?.uid) {
-      const firebaseName = firebaseUser?.displayName || ''
-      if (firebaseName) setDisplayName(firebaseName)
-      return
-    }
-
-    let cancelled = false
-    setIsLoading(true)
-    const loadProfile = userId
-      ? fetchProfile(userId)
-      : fetchProfileByFirebaseUid(firebaseUser.uid)
-    loadProfile
-      .then((saved) => {
-        if (cancelled) return
-        setDisplayName(saved.displayName || '')
-        setUsername(saved.username || '')
-        setAboutMe(saved.aboutMe || '')
-        setAvatarDataUrl(saved.avatarDataUrl || '')
-        setFriendId(saved.friendId || '')
-        setStoredUserId(saved.id)
-      })
-      .catch((error) => {
-        if (cancelled) return
-        if (error.response?.status === 404) {
-          if (userId) setStoredUserId('')
-          return
+    let active = true
+    async function loadProfile() {
+      let profile = null
+      try {
+        const res = await fetch(`http://localhost:3000/api/users/${encodeURIComponent(currentUser.uid)}`)
+        if (res.status !== 404) {
+          const data = await res.json().catch(() => ({}))
+          if (!res.ok) throw new Error(data.error || 'Could not load profile.')
+          profile = data
         }
-        setFormError(apiErrorMessage(error, 'Could not load profile from the server.'))
-      })
-      .finally(() => {
-        if (!cancelled) setIsLoading(false)
-      })
+      } catch (err) {
+        if (active) {
+          setSaveError(err instanceof TypeError
+            ? 'Could not reach the backend. Start the backend server and try again.'
+            : err.message || 'Could not load profile.')
+        }
+      }
 
-    return () => {
-      cancelled = true
+      if (!active) return
+      setDisplayName(profile?.displayName || currentUser.displayName || '')
+      setUsername(profile?.username || '')
+      setAboutMe(profile?.aboutMe || '')
+      setAvatarDataUrl(profile?.avatar || currentUser.photoURL || '')
+      setNameError('')
+      setUsernameError('')
+      if (!profile) return
+      setSaveError('')
     }
-  }, [isOpen])
+
+    loadProfile()
+    return () => {
+      active = false
+    }
+  }, [isOpen, currentUser])
 
   if (!isOpen) return null
 
@@ -92,6 +67,11 @@ function ProfileModal({ isOpen, onClose }) {
 
   const handleSave = async (e) => {
     e.preventDefault()
+    if (!currentUser) {
+      setSaveError('You must be logged in to save a profile.')
+      return
+    }
+
     const trimmedName = displayName.trim()
     const trimmedUsername = username.trim()
     let hasError = false
@@ -102,10 +82,7 @@ function ProfileModal({ isOpen, onClose }) {
       setNameError('')
     }
 
-    if (!trimmedUsername) {
-      setUsernameError('Username is required.')
-      hasError = true
-    } else if (!USERNAME_PATTERN.test(trimmedUsername)) {
+    if (trimmedUsername && !USERNAME_PATTERN.test(trimmedUsername)) {
       setUsernameError('Use 3–20 letters, numbers, or underscores.')
       hasError = true
     } else {
@@ -114,28 +91,32 @@ function ProfileModal({ isOpen, onClose }) {
 
     if (hasError) return
 
-    setIsSaving(true)
-    setFormError('')
     try {
-      const saved = await saveProfile({
-        id: getStoredUserId() || undefined,
-        displayName: trimmedName,
-        username: trimmedUsername,
-        aboutMe: aboutMe.trim(),
-        avatarDataUrl,
-        firebaseUid: auth.currentUser?.uid || '',
+      const res = await fetch('http://localhost:3000/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          uid: currentUser.uid,
+          displayName: trimmedName,
+          email: currentUser.email,
+          avatar: avatarDataUrl,
+          username: trimmedUsername,
+          aboutMe: aboutMe.trim(),
+        }),
       })
-      setFriendId(saved.friendId || '')
-      onClose()
-    } catch (error) {
-      const message = apiErrorMessage(error, 'Could not save profile.')
-      if (error.response?.status === 409) {
-        setUsernameError(message)
-      } else {
-        setFormError(message)
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        throw new Error(data.error || 'Could not save profile. Try again.')
       }
-    } finally {
-      setIsSaving(false)
+      console.log('Profile saved:', data)
+      onProfileSaved?.(data)
+      setSaveError('')
+      onClose()
+    } catch (err) {
+      console.error('Save profile failed:', err)
+      setSaveError(err instanceof TypeError
+        ? 'Could not reach the backend. Start the backend server and try again.'
+        : err.message || 'Failed to save profile. Try again.')
     }
   }
 
@@ -202,7 +183,6 @@ function ProfileModal({ isOpen, onClose }) {
               }}
               placeholder="Your full name"
               autoComplete="name"
-              disabled={isLoading || isSaving}
             />
             {nameError && (
               <p className="create-group-error" role="alert">
@@ -222,7 +202,6 @@ function ProfileModal({ isOpen, onClose }) {
               }}
               placeholder="Type username here"
               autoComplete="username"
-              disabled={isLoading || isSaving}
             />
             {usernameError && (
               <p className="create-group-error" role="alert">
@@ -230,7 +209,7 @@ function ProfileModal({ isOpen, onClose }) {
               </p>
             )}
             <span className="create-group-hint">
-              It must be unique (3–20 letters, numbers, and/or underscores).
+              3–20 letters, numbers, and/or underscores.
             </span>
           </label>
 
@@ -241,19 +220,12 @@ function ProfileModal({ isOpen, onClose }) {
               onChange={(e) => setAboutMe(e.target.value)}
               placeholder="Introduce yourself!"
               rows={4}
-              disabled={isLoading || isSaving}
             />
           </label>
 
-          {friendId && (
-            <p className="create-group-hint">
-              Your Friend ID is <strong>{friendId}</strong>. Share it so others can invite you to a group.
-            </p>
-          )}
-
-          {formError && (
+          {saveError && (
             <p className="create-group-error" role="alert">
-              {formError}
+              {saveError}
             </p>
           )}
 
@@ -261,8 +233,8 @@ function ProfileModal({ isOpen, onClose }) {
             <button type="button" className="create-group-cancel" onClick={onClose}>
               Cancel
             </button>
-            <button type="submit" className="create-group-submit" disabled={isLoading || isSaving}>
-              {isSaving ? 'Saving…' : 'Save Profile'}
+            <button type="submit" className="create-group-submit">
+              Save Profile
             </button>
           </div>
         </form>

@@ -32,9 +32,10 @@
 }
 
 .nav {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
   padding: 6px 32px;
   background-color: $color-nav;
   width: 100%;
@@ -46,13 +47,58 @@
     font-size: 22px;
   }
 
-  .nav-spacer {
-    margin-right: auto;
+  .nav-links,
+  .nav-account,
+  .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .nav-links {
+    grid-column: 2;
+    justify-self: center;
+  }
+
+  .nav-account {
+    grid-column: 3;
+    justify-self: end;
   }
 
   .nav-login {
-    margin-left: auto;
+    margin-left: 0;
   }
+
+  .nav-user img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+}
+
+@media (max-width: 640px) {
+  .nav {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 0.75rem;
+    padding: 10px 12px;
+
+    .nav-links,
+    .nav-account {
+      gap: 0.65rem;
+    }
+
+    .nav-account {
+      grid-column: 1 / -1;
+      justify-self: center;
+    }
+
+    .nav-user span {
+      max-width: 150px;
+      overflow-wrap: anywhere;
+    }
+  }
+
 }
 
 .footer {
@@ -714,13 +760,13 @@ $ucsd-blue-bright: #5eb3f0;
   gap: 10px;
 }
 
-.username-input, .password-input {
+.email-input, .password-input {
   color: $color-text;
   font-weight: 700;
   font-size: 13px;
 }
 
-.username-box, .password-box {
+.email-box, .password-box {
   padding: 0.4rem 0.75rem;
   width: 100%;
   color: $color-text;
@@ -752,6 +798,7 @@ $ucsd-blue-bright: #5eb3f0;
   border-radius: $radius-pill;
   margin-top: 30px;
   margin-bottom: 10px;
+  transition: all 0.2s ease-in-out;
   cursor: pointer;
 
   &:hover {
@@ -776,11 +823,147 @@ $ucsd-blue-bright: #5eb3f0;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    transition: all 0.2s ease-in-out;
     
     &:hover {
       color: $color-nav;
     }
   }
 
-  
+}
+
+.login-link, .register-link {
+  color: $color-text;
+  font-size: 0.9rem;
+
+  a {
+    text-decoration: none;
+    color: $ucsd-navy;
+    font-weight: bold;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+
+    &:hover {
+      color: $ucsd-blue;
+    }
+  }
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Calendar Avatars */
+
+.avatar-circle {
+  border: none;
+  cursor: pointer;
+}
+
+.avatar-circle.inactive {
+  opacity: 0.35;
+}
+
+.avatar-circle.active {
+  opacity: 1;
+}
+
+.avatar-circle:disabled {
+  cursor: default;
+}
+
+/* Add Event Modal */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.add-event-modal {
+  background: #fff;
+  width: 420px;
+  max-width: 90%;
+  padding: 28px;
+  border-radius: 16px;
+  border: 1px solid #222;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  color: #222;
+}
+
+.add-event-modal h2 {
+  margin: 0 0 24px;
+  font-size: 1.7rem;
+}
+
+.add-event-modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.add-event-modal form > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.add-event-modal label,
+.add-event-modal p {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.add-event-modal input[type="text"],
+.add-event-modal input[type="time"] {
+  padding: 10px 12px;
+  border: 1px solid #aaa;
+  border-radius: 7px;
+  font: inherit;
+}
+
+.day-options {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap;
+  gap: 10px !important;
+}
+
+.day-options label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: normal;
+}
+
+.modal-buttons {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: flex-end;
+  gap: 10px !important;
+  margin-top: 8px;
+}
+
+.modal-buttons button {
+  padding: 9px 16px;
+  border: 1px solid #222;
+  border-radius: 7px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.modal-buttons button:last-child {
+  background: #222;
+  color: white;
 }

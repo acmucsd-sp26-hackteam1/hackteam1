@@ -42,7 +42,7 @@ function LargeFooter() {
 
         <div className="footer-navigate">
           <h3>Navigate</h3>
-          <Link to="/calendar">Calendar &gt;</Link>
+          <Link to="/calendartest">Calendar &gt;</Link>
           <Link to="/create-team">Create a Group &gt;</Link>
           <Link to="/join-team">Join a Group &gt;</Link>
         </div>
