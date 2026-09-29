@@ -73,6 +73,7 @@ function CreateGroupFAB({ onGroupChanged }) {
       if (!res.ok) throw new Error(data.error || 'Could not create group.')
       console.log('Group created:', data)
       setCreatedCode(data.code)
+      setCurrentGroupCode(data.code)
     } catch (err) {
       console.error('Create group failed:', err)
       setCreateError(err.message || 'Could not create group. Try again.')
