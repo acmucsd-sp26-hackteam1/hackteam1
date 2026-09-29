@@ -926,3 +926,13 @@ $ucsd-blue-bright: #5eb3f0;
   font-size: 18px;
   font-weight: 600;
 }
+
+.course-search { position: relative; }
+.course-search-results {
+  position: absolute;
+  z-index: 1000;
+  background: white;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}

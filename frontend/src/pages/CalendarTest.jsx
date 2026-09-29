@@ -8,6 +8,7 @@ import ProfileModal from "../components/ProfileModal.jsx";
 import AddEventModal from "../components/AddEventModal.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useCurrentGroup } from "../context/CurrentGroupContext.jsx";
+import { CourseSearch } from '../components/CourseSearch.jsx'
 
 const CALENDAR_COLORS = [
   "#4285f4",
@@ -17,6 +18,26 @@ const CALENDAR_COLORS = [
   "#9c27b0",
   "#00acc1",
 ];
+
+const DAY_MAP = { M: 'Monday', Tu: 'Tuesday', W: 'Wednesday', Th: 'Thursday', F: 'Friday' }
+
+const QUARTER_START = '2026-09-24'
+
+function parseDays(str) {
+  return (String(str ?? '').match(/Tu|Th|M|W|F/g) || []).map((d) => DAY_MAP[d])
+}
+
+// "9:00a" -> "09:00", "5:50p" -> "17:50", "12:30p" -> "12:30", "12:00a" -> "00:00"
+function to24Hour(str) {
+  const match = String(str ?? '').trim().match(/^(\d{1,2}):(\d{2})\s*([ap])/i)
+  if (!match) return ''
+  let hours = parseInt(match[1], 10)
+  const minutes = match[2]
+  const isPM = match[3].toLowerCase() === 'p'
+  if (isPM && hours !== 12) hours += 12
+  if (!isPM && hours === 12) hours = 0
+  return `${String(hours).padStart(2, '0')}:${minutes}`
+}
 
 function CalendarTest({ onProfileSaved }) {
   const { currentUser } = useAuth();
@@ -249,6 +270,47 @@ function CalendarTest({ onProfileSaved }) {
     );
   }
 
+    async function handleAddCourse(course) {
+    if (!currentUser) return
+
+    const lecture = course.sections?.find((s) => s.type === 'LE')
+    if (!lecture) {
+      console.warn('No LE section found for', course)
+      return
+    }
+
+    const recurringDays = parseDays(lecture.days)
+    if (recurringDays.length === 0) {
+      console.warn('Lecture has no meeting days', lecture)
+      return
+    }
+
+    const payload = {
+      name: `${course.subject} ${course.number}`,
+      ownerUid: currentUser.uid,
+      startDate: QUARTER_START,
+      startTime: to24Hour(lecture.time_start),
+      endTime: to24Hour(lecture.time_end),
+      isRecurring: true,
+      recurringDays,
+      location: `${lecture.building} ${lecture.room}`.trim(),
+    }
+
+    try {
+      const response = await fetch('http://localhost:3000/api/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      if (!response.ok) throw new Error('Failed to save course')
+      const saved = await response.json()
+      console.log('Saved course event:', saved)
+      addEvent(saved)
+    } catch (err) {
+      console.error('Error adding course:', err)
+    }
+  }
+
   async function deleteEvent(eventId) {
     try {
       const response = await fetch(
@@ -329,6 +391,8 @@ function CalendarTest({ onProfileSaved }) {
           )}
 
         </div>
+
+        <CourseSearch onAddCourse={handleAddCourse} />
 
         <div className="view-buttons">
 
