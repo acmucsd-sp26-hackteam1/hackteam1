@@ -1,17 +1,14 @@
 const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
-const userSchema = new mongoose.Schema(
-    {
-        displayName: { type: String, required: true, trim: true },
-        username: { type: String, required: true, trim: true },
-        usernameLower: { type: String, required: true, unique: true, index: true },
-        aboutMe: { type: String, default: "", trim: true },
-        avatarDataUrl: { type: String, default: "" },
-        firebaseUid: { type: String, default: "", index: true },
-        friendId: { type: String, required: true, unique: true, index: true },
-        groupIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group" }],
-    },
-    { timestamps: true }
-);
+const userSchema = new Schema({
+    uid: { type: String, required: true, unique: true }, // Firebase UID
+    friendId: { type: String, unique: true, sparse: true },
+    displayName: { type: String },
+    email: { type: String },
+    avatar: { type: String }, // Firebase photoURL, or later a custom uploaded one
+    username: { type: String, trim: true },
+    aboutMe: { type: String, trim: true },
+}, { timestamps: true });
 
 module.exports = mongoose.model("User", userSchema);
