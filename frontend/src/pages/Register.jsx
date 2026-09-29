@@ -14,7 +14,6 @@ function Register() {
   const handleGoogleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      // TODO - the actual login part
       console.log('signed in as', result.user.displayName);
       navigate("/");
     } catch (err) {

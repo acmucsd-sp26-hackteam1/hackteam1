@@ -967,3 +967,77 @@ $ucsd-blue-bright: #5eb3f0;
   background: #222;
   color: white;
 }
+
+.calendar-top-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.group-selector select {
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 28px 6px 8px;
+}
+
+.group-selector select:focus {
+  outline: none;
+}
+
+.no-group-label {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.course-search { position: relative; }
+
+.course-search-results {
+  position: absolute;
+  z-index: 1000;
+  background: rgb(50, 32, 32);
+  color: #f5f5f5;               /* light text for the dark background */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Each course: stack the header row and the section rows vertically */
+.course-search-results li {
+  display: block;               /* was flex; must be block so rows stack */
+  padding: 8px 10px;
+  border-bottom: 1px solid #090808;
+}
+
+/* Rows that hold text on the left and a button on the right */
+.course-header,
+.section-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.course-header span {
+  flex: 1;
+  text-align: left;
+  font-size: 14px;
+}
+
+.section-row {
+  padding: 4px 0 0 12px;        /* indent discussions under the course */
+  font-size: 13px;
+  color: #cfcfcf;               /* slightly dimmer than the course title */
+}
+
+.section-row span {
+  flex: 1;
+  text-align: left;
+}

@@ -21,4 +21,4 @@ groupSchema.statics.generateUniqueCode = async function () {
     return code;
 };
 
-module.exports = mongoose.model("Group", groupSchema);
+module.exports = mongoose.models.Group || mongoose.model("Group", groupSchema);
