@@ -106,9 +106,10 @@ function CalendarTest({ onProfileSaved }) {
 
   useEffect(() => {
 
-    if (!selectedGroup || !currentUser) {
+    if (!currentUser) {
       return;
     }
+    const memberUids = selectedGroup ? selectedGroup.members || [] : [currentUser.uid];
     async function fetchGroupCalendars() {
 
       try {
@@ -128,7 +129,7 @@ function CalendarTest({ onProfileSaved }) {
 
             body: JSON.stringify({
               uids:
-                selectedGroup.members || [],
+                memberUids,
             }),
           }
         );
@@ -149,7 +150,7 @@ function CalendarTest({ onProfileSaved }) {
         );
 
         const groupCalendars =
-          (selectedGroup.members || []).map(
+          memberUids.map(
             (uid, index) => ({
 
               id: uid,
