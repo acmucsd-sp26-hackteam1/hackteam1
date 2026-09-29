@@ -35,7 +35,20 @@ function App() {
     let active = true
     fetch(`http://localhost:3000/api/users/${encodeURIComponent(currentUser.uid)}`)
       .then(async (response) => {
-        if (response.status === 404) return null
+        if (response.status === 404) {
+          const createResponse = await fetch('http://localhost:3000/api/users', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              uid: currentUser.uid,
+              displayName: currentUser.displayName || '',
+              email: currentUser.email || '',
+              avatar: currentUser.photoURL || '',
+            }),
+          })
+          if (!createResponse.ok) throw new Error('Could not create account profile.')
+          return createResponse.json()
+        }
         const profile = await response.json().catch(() => ({}))
         if (!response.ok) throw new Error(profile.error || 'Could not load profile.')
         return profile
