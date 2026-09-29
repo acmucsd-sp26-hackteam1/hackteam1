@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import About from './pages/About.jsx'
-import CalendarTest from './pages/CalendarTest.jsx'
+import Calendar from './pages/Calendar.jsx'
 import Login from './pages/Login.jsx'
 import JoinTeam from './pages/JoinTeam.jsx'
 import CreateTeam from './pages/CreateTeam.jsx'
@@ -15,7 +15,7 @@ import { GroupModalProvider } from './context/GroupModalContext.jsx'
 import { useAuth } from './context/AuthContext.jsx'
 import { doSignOut } from './auth/auth.js'
 
-const CREATE_GROUP_ROUTES = ['/calendartest']
+const CREATE_GROUP_ROUTES = ['/calendar']
 const LARGE_FOOTER_ROUTES = ['/', '/about']
 
 function App() {
@@ -83,7 +83,7 @@ function App() {
             <div className="nav-links">
               <Link to="/">Home</Link>
               <Link to="/about">About</Link>
-              <Link to="/calendartest">Calendar</Link>
+              <Link to="/calendar">Calendar</Link>
             </div>
 
             <div className="nav-account">
@@ -111,7 +111,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/calendartest" element={<CalendarTest onProfileSaved={setUserProfile} currentUserAvatar={currentUserAvatar} />} />
+          <Route path="/calendar" element={<Calendar onProfileSaved={setUserProfile} currentUserAvatar={currentUserAvatar} />} />
           <Route path="/join-team" element={<JoinTeam />} />
           <Route path="/create-team" element={<CreateTeam />} />
           <Route path="/login" element={<Login />} />

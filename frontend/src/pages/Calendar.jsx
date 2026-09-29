@@ -39,7 +39,7 @@ function to24Hour(str) {
   return `${String(hours).padStart(2, '0')}:${minutes}`
 }
 
-function CalendarTest({ onProfileSaved, currentUserAvatar }) {
+function Calendar({ onProfileSaved, currentUserAvatar }) {
   const { currentUser } = useAuth();
   const { currentGroupCode, setCurrentGroupCode } = useCurrentGroup();
   const [viewMode, setViewMode] = useState(TimeFrames.MONTH);
@@ -546,4 +546,4 @@ function CalendarTest({ onProfileSaved, currentUserAvatar }) {
 }
 
 
-export default CalendarTest;
+export default Calendar;
