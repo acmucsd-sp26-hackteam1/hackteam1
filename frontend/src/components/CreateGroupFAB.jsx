@@ -8,7 +8,7 @@ const TABS = {
   JOIN: 'join',
 }
 
-function CreateGroupFAB() {
+function CreateGroupFAB({ onGroupChanged }) {
   const { isOpen, activeTab, setActiveTab, openGroupModal, closeGroupModal } = useGroupModal()
   const [groupName, setGroupName] = useState('')
   const [friendIds, setFriendIds] = useState('')
@@ -101,13 +101,17 @@ function CreateGroupFAB() {
         body: JSON.stringify({ userId: currentUser?.uid }),
       })
       const data = await res.json()
+      
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to join group")
+      }
       console.log('Joined group:', data)
       setCurrentGroupCode(data.code)
+      closeModal()
     } catch (err) {
       console.error('Join group failed:', err)
+      setJoinError(err.message)
     }
-
-    closeModal()
   }
 
   const modalTitle = activeTab === GROUP_MODAL_TABS.CREATE ? 'Create Group' : 'Join Group'

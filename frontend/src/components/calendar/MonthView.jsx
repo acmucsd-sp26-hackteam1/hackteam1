@@ -8,13 +8,13 @@ import {
 import { useState } from "react";
 import { MonthDayCell } from "./MonthDayCell.jsx";
 
-export function MonthView({ calendars }) {
+export function MonthView({ calendars, currentUserUid, onDeleteEvent }) {
   const [year, setYear] = useState(
     new Date().getFullYear()
   );
 
   const [month, setMonth] = useState(
-    Months.JANUARY
+    new Date().getMonth()
   );
 
   function addMonth(toAdd) {
@@ -36,20 +36,30 @@ export function MonthView({ calendars }) {
     });
   }
 
+  const firstDayOfMonth = new Date(year, month, 1).getDay();
+
+  const daysInMonth = new Date(
+    year,
+    month + 1,
+    0
+  ).getDate();
+
+  const trailingEmptyCells = (7 - ((firstDayOfMonth + daysInMonth) % 7)) % 7;
+
   return (
     <>
       <div className="month-container">
-        <div onClick={() => addMonth(-1)}>
-          go back a month
-        </div>
+        <button type="button" onClick={() => addMonth(-1)} aria-label="Previous month">
+          ‹
+        </button>
 
         <div className="month-name">
           {getMonthName(month) + " " + year}
         </div>
 
-        <div onClick={() => addMonth(1)}>
-          go forward a month
-        </div>
+        <button type="button" onClick={() => addMonth(1)} aria-label="Next month">
+          ›
+        </button>
       </div>
 
       <div className="month-grid">
@@ -59,19 +69,36 @@ export function MonthView({ calendars }) {
           </div>
         ))}
 
-        {Array(35).fill(null).map((_, i) => {
-          const weekday = i % 7;
-          const dayName = getDayName(weekday);
+        {Array(firstDayOfMonth).fill(null).map((_, i) => (
+          <div
+            key={`empty-${i}`}
+            className="month-cell"
+          />
+        ))}
+
+        {Array(daysInMonth).fill(null).map((_, i) => {
+          const day = i + 1;
+
+          const date = new Date(year, month, day);
 
           return (
-            <div key={i} className="month-cell">
+            <div key={day} className="month-cell">
               <MonthDayCell
-                dayName={dayName}
+                date={date}
                 calendars={calendars}
+                currentUserUid={currentUserUid}
+                onDeleteEvent={onDeleteEvent}
               />
             </div>
           );
         })}
+
+        {Array(trailingEmptyCells).fill(null).map((_, i) => (
+          <div
+            key={`trailing-${i}`}
+            className="month-cell"
+          />
+        ))}
       </div>
     </>
   );

@@ -9,6 +9,9 @@ const userSchema = new Schema({
     avatar: { type: String }, // Firebase photoURL, or later a custom uploaded one
     username: { type: String, trim: true },
     aboutMe: { type: String, trim: true },
+    friendId: { type: String, unique: true, sparse: true },
+    username: { type: String, trim: true },
+    aboutMe: { type: String, trim: true },
 }, { timestamps: true });
 
 module.exports = mongoose.model("User", userSchema);

@@ -5,7 +5,6 @@
 @use './styles/footer';
 @use './styles/pages/about';
 @use './styles/pages/calendar';
-@use './styles/pages/group-band';
 
 :root {
   font-family: $font-body;
@@ -502,8 +501,10 @@ $ucsd-blue-bright: #5eb3f0;
 }
 
 .month-cell {
-  border: 1px solid yellow;
-  min-height: 80px;
+  border-right: $border-thin;
+  border-bottom: $border-thin;
+  min-height: 110px;
+  background-color: $color-glass;
 }
 
 /*
@@ -540,7 +541,8 @@ $ucsd-blue-bright: #5eb3f0;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 16px;
+  min-height: 300px;
+  padding: 0 0 $space;
 }
 
 .day-row {
@@ -568,16 +570,16 @@ $ucsd-blue-bright: #5eb3f0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 16px 0;
+  gap: 14px;
+  padding: $space 0;
 }
 
 .avatar-circle {
-    width: 72px;
-    height: 72px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     overflow: hidden;
-    margin-top: 12px;
+    margin-top: 0;
     border: 2px solid $color-avatar-outline;
 }
 
@@ -862,7 +864,8 @@ $ucsd-blue-bright: #5eb3f0;
 /* Calendar Avatars */
 
 .avatar-circle {
-  border: none;
+  padding: 0;
+  background: none;
   cursor: pointer;
 }
 
@@ -883,7 +886,7 @@ $ucsd-blue-bright: #5eb3f0;
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(2, 2, 2, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -895,15 +898,15 @@ $ucsd-blue-bright: #5eb3f0;
   width: 420px;
   max-width: 90%;
   padding: 28px;
-  border-radius: 16px;
-  border: 1px solid #222;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  color: #222;
+  border-radius: $radius-large;
+  border: $border-thick;
+  box-shadow: $shadow-popup;
+  color: $color-text;
 }
 
 .add-event-modal h2 {
   margin: 0 0 24px;
-  font-size: 1.7rem;
+  font-size: 30px;
 }
 
 .add-event-modal form {
@@ -921,15 +924,16 @@ $ucsd-blue-bright: #5eb3f0;
 .add-event-modal label,
 .add-event-modal p {
   margin: 0;
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .add-event-modal input[type="text"],
+.add-event-modal input[type="date"],
 .add-event-modal input[type="time"] {
-  padding: 10px 12px;
-  border: 1px solid #aaa;
-  border-radius: 7px;
+  padding: 8px 12px;
+  border: $border-thin;
+  border-radius: $radius-pill;
   font: inherit;
 }
 
@@ -956,14 +960,97 @@ $ucsd-blue-bright: #5eb3f0;
 }
 
 .modal-buttons button {
-  padding: 9px 16px;
-  border: 1px solid #222;
-  border-radius: 7px;
+  padding: 8px 20px;
+  border: $border-thin;
+  border-radius: $radius-pill;
+  background: #fff;
+  color: $color-text;
   cursor: pointer;
   font: inherit;
+  font-weight: 700;
 }
 
 .modal-buttons button:last-child {
-  background: #222;
-  color: white;
+  background: $color-olive;
+  color: $color-text;
+}
+
+.calendar-top-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 0;
+}
+
+.group-selector select {
+  border: $border-thin;
+  border-radius: $radius-pill;
+  background: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 6px 28px 6px 14px;
+}
+
+.group-selector select:focus {
+  outline: none;
+}
+
+.no-group-label {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.course-search { position: relative; }
+
+.course-search-results {
+  position: absolute;
+  z-index: 1000;
+  background: #fff;
+  color: $color-text;
+  border: $border-thin;
+  border-radius: $radius-small;
+  box-shadow: $shadow-popup;
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 0;
+  width: 100%;
+  min-width: 380px;
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+/* Each course: stack the header row and the section rows vertically */
+.course-search-results li {
+  display: block;               /* was flex; must be block so rows stack */
+  padding: 8px 10px;
+  border-bottom: $border-thin;
+}
+
+/* Rows that hold text on the left and a button on the right */
+.course-header,
+.section-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.course-header span {
+  flex: 1;
+  text-align: left;
+  font-size: 14px;
+}
+
+.section-row {
+  padding: 4px 0 0 12px;        /* indent discussions under the course */
+  font-size: 13px;
+  color: $color-text;
+}
+
+.section-row span {
+  flex: 1;
+  text-align: left;
 }

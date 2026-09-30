@@ -7,7 +7,7 @@ function JoinTeam() {
   const { openGroupModal } = useGroupModal()
   useEffect(() => {
     openGroupModal(GROUP_MODAL_TABS.JOIN)
-    navigate('/calendartest', { replace: true })
+    navigate('/calendar', { replace: true })
   }, [navigate, openGroupModal])
   return null
 }
